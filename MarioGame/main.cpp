@@ -26,6 +26,7 @@ WARNING: This one file example has a hell LOT of *sinful* programming practices
 ================================================================ */
 
 #include <windows.h>
+#include <math.h>
 
 #include <d3d10.h>
 #include <d3dx10.h>
@@ -311,20 +312,21 @@ void Update(DWORD dt)
 	//brick_x++;
 
 	brick_x += brick_vx*dt; 
+	brick_y = BRICK_START_Y + sin(brick_x / 60) * 100;
 
 	if (brick_x <= 0 || brick_x >= BackBufferWidth - BRICK_WIDTH) {
 
 		brick_vx = -brick_vx;
 
-		//	//Why not having these logics would make the brick disappear sometimes?  
-		////	if (brick_x <= 0)
-		////	{
-		////		brick_x = 0;
-		////	}
-		////	else if (brick_x >= BackBufferWidth - BRICK_WIDTH)
-		////	{
-		////		brick_x = BackBufferWidth - BRICK_WIDTH;
-		////	}
+			//Why not having these logics would make the brick disappear sometimes?  
+			if (brick_x <= 0)
+			{
+				brick_x = 0;
+			}
+			else if (brick_x >= BackBufferWidth - BRICK_WIDTH)
+			{
+				brick_x = BackBufferWidth - BRICK_WIDTH;
+			}
 	}
 }
 
