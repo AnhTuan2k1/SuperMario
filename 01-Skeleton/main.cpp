@@ -44,7 +44,8 @@ CMario *mario;
 #define MARIO_START_VX 0.1f
 #define MARIO_START_VY 0.1f
 
-
+int numBricks = 0;
+CBrick** bricks;
 CBrick *brick;
 #define BRICK_X 10.0f
 #define BRICK_Y 120.0f
@@ -84,6 +85,14 @@ void LoadResources()
 	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX, MARIO_START_VY, texMario);
 	brick = new CBrick(BRICK_X, BRICK_Y, texBrick);
 
+	numBricks = SCREEN_WIDTH / texBrick->getWidth();
+	bricks = new CBrick * [numBricks];
+	for (int i = 0; i < numBricks; i++)
+	{
+		bricks[i] = new CBrick(BRICK_X + i * texBrick->getWidth(), BRICK_Y, texBrick);
+
+	}
+
 	
 	// objects.push_back(mario);
 	// for(i)		 
@@ -110,6 +119,10 @@ void Update(DWORD dt)
 
 	mario->Update(dt);
 	brick->Update(dt);
+	for (int i = 0; i < numBricks; i++)
+	{
+		bricks[i]->Update(dt);
+	}
 
 	DebugOutTitle(L"01 - Skeleton %0.1f, %0.1f", mario->GetX(), mario->GetY());
 }
@@ -139,6 +152,11 @@ void Render()
 
 		brick->Render();
 		mario->Render();
+
+		for (int i = 0; i < numBricks; i++)
+		{
+			bricks[i]->Render();
+		}
 
 		// Uncomment this line to see how to draw a porttion of a texture  
 		g->Draw(10, 10, texMisc, 300, 117, 316, 133);
