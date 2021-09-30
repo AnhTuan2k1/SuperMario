@@ -11,7 +11,7 @@ void CMario::Update(DWORD dt)
 	x += vx*dt;
 
 	int BackBufferWidth = CGame::GetInstance()->GetBackBufferWidth();
-	if (x <= 0 || x >= BackBufferWidth - MARIO_WIDTH) {
+	if (x <= 0 || x >= BackBufferWidth - MARIO_WIDTH - 40) {
 
 		vx = -vx;
 
@@ -19,9 +19,9 @@ void CMario::Update(DWORD dt)
 		{
 			x = 0;
 		}
-		else if (x >= BackBufferWidth - MARIO_WIDTH)
+		else if (x >= BackBufferWidth - MARIO_WIDTH - 40)
 		{
-			x = (float)(BackBufferWidth - MARIO_WIDTH);
+			x = (float)(BackBufferWidth - MARIO_WIDTH - 40);
 		}
 	}
 }
@@ -43,4 +43,54 @@ void CBrick::Render() {
 
 	ani->Render(x, y);
 
+}
+
+void CBrick2::Render() {
+
+	LPANIMATION ani = CAnimations::GetInstance()->Get(520);
+
+	ani->Render(x, y);
+
+}
+
+void CPipe::Render()
+{
+	LPANIMATION ani = CAnimations::GetInstance()->Get(530);
+
+	ani->Render(x, y);
+}
+
+void CCloud::Render()
+{
+	LPANIMATION ani = CAnimations::GetInstance()->Get(540);
+
+	ani->Render(x, y);
+}
+
+void CBush::Render()
+{
+	LPANIMATION ani = CAnimations::GetInstance()->Get(550);
+
+	ani->Render(x, y);
+}
+
+void CMountain::Render()
+{
+	LPANIMATION ani = CAnimations::GetInstance()->Get(560);
+
+	ani->Render(x, y);
+}
+
+void CGround::Render()
+{
+	LPANIMATION ani = CAnimations::GetInstance()->Get(570);
+
+	ani->Render(x, y);
+}
+
+void CEnemy::Render()
+{
+	LPANIMATION ani = CAnimations::GetInstance()->Get(580);
+
+	ani->Render(x, y);
 }

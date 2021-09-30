@@ -1,6 +1,6 @@
 /* =============================================================
 	INTRODUCTION TO GAME PROGRAMMING SE102
-	
+
 	SAMPLE 02 - SPRITE AND ANIMATION
 
 	This sample illustrates how to:
@@ -39,18 +39,29 @@
 #define ID_TEX_MARIO 0
 #define ID_TEX_ENEMY 10
 #define ID_TEX_MISC 20
+#define ID_TEX_GROUND 30
 
 #define TEXTURES_DIR L"textures"
 #define TEXTURE_PATH_MARIO TEXTURES_DIR "\\mario.png"
 #define TEXTURE_PATH_MISC TEXTURES_DIR "\\misc.png"
 #define TEXTURE_PATH_ENEMIES TEXTURES_DIR "\\enemies.png"
+#define TEXTURE_PATH_GROUND TEXTURES_DIR "\\background.png"
 
-CMario *mario;
-#define MARIO_START_X 10.0f
-#define MARIO_START_Y 130.0f
+#define BRICK_WIDTH 16
+
+CMario* mario;
+#define MARIO_START_X 15.0f
+#define MARIO_START_Y 160
 #define MARIO_START_VX 0.1f
 
-CBrick *brick;
+CBrick** brick = new CBrick * [3];
+CBrick2** brick2 = new CBrick2 * [3]; 
+CGround** ground = new CGround * [40];
+CCloud** cloud = new CCloud * [5];
+CPipe* pipe;
+
+CEnemy* enemy;
+CMountain* mountain;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -66,20 +77,21 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 /*
-	Load all game resources 
+	Load all game resources
 	In this example: load textures, sprites, animations and mario object
 */
 void LoadResources()
 {
-	CTextures * textures = CTextures::GetInstance();
+	CTextures* textures = CTextures::GetInstance();
 
 	textures->Add(ID_TEX_MARIO, TEXTURE_PATH_MARIO);
-	//textures->Add(ID_ENEMY_TEXTURE, TEXTURE_PATH_ENEMIES, D3DCOLOR_XRGB(156, 219, 239));
+	textures->Add(ID_TEX_ENEMY, TEXTURE_PATH_ENEMIES);
 	textures->Add(ID_TEX_MISC, TEXTURE_PATH_MISC);
+	textures->Add(ID_TEX_GROUND, TEXTURE_PATH_GROUND);
 
 
-	CSprites * sprites = CSprites::GetInstance();
-	
+	CSprites* sprites = CSprites::GetInstance();
+
 	LPTEXTURE texMario = textures->Get(ID_TEX_MARIO);
 
 	// readline => id, left, top, right 
@@ -97,9 +109,35 @@ void LoadResources()
 	sprites->Add(20002, 318, 117, 334, 133, texMisc);
 	sprites->Add(20003, 336, 117, 352, 133, texMisc);
 	sprites->Add(20004, 354, 117, 370, 133, texMisc);
-	
 
-	CAnimations * animations = CAnimations::GetInstance();
+
+	sprites->Add(30001, 300, 135, 316, 151, texMisc);
+	sprites->Add(30002, 318, 135, 334, 151, texMisc);
+	sprites->Add(30003, 336, 135, 352, 151, texMisc);
+	sprites->Add(30004, 354, 135, 370, 151, texMisc);
+	sprites->Add(30005, 372, 135, 388, 151, texMisc);
+
+
+	/*sprites->Add(40001, 408, 225, 423, 240, texMisc);*/
+
+	LPTEXTURE texGround = textures->Get(ID_TEX_GROUND);
+
+	////sprites->Add(30001, 300, 135, 316, 151, texMisc);
+
+	sprites->Add(40001, 471, 464, 493, 481, texGround);
+
+	sprites->Add(50001, 107, 0, 134, 19, texGround); //cloud
+	sprites->Add(60001, 131, 630, 170, 669, texGround); //pipe
+	sprites->Add(80001, 16, 600, 110, 641, texGround); //mountain
+
+	LPTEXTURE texEnemy = textures->Get(ID_TEX_ENEMY);
+	sprites->Add(70001, 312, 115, 327, 129, texEnemy);
+	sprites->Add(70002, 330, 114, 345, 129, texEnemy);
+	sprites->Add(70003, 348, 115, 363, 129, texEnemy);
+	sprites->Add(70004, 366, 115, 381, 129, texEnemy);
+
+	
+	CAnimations* animations = CAnimations::GetInstance();
 	LPANIMATION ani;
 
 	ani = new CAnimation(100);
@@ -114,17 +152,72 @@ void LoadResources()
 	ani->Add(10013);
 	animations->Add(501, ani);
 
-	
+
 	ani = new CAnimation(100);
-	ani->Add(20001,1000);
+	ani->Add(20001, 1000);
 	ani->Add(20002);
 	ani->Add(20003);
 	ani->Add(20004);
 	animations->Add(510, ani);
-	
-	
+
+	ani = new CAnimation(100);
+	ani->Add(30001, 666);
+	ani->Add(30002);
+	ani->Add(30003);
+	ani->Add(30004);
+	ani->Add(30005);
+	animations->Add(520, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(40001, 1000);
+	animations->Add(570, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(50001, 1000);
+	animations->Add(540, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(60001, 1000);
+	animations->Add(530, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(80001, 1000);
+	animations->Add(560, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(70001, 600);
+	ani->Add(70002, 200);
+	ani->Add(70003, 200);
+	ani->Add(70004, 200);
+	animations->Add(580, ani);
+
+
 	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX);
-	brick = new CBrick(100.0f, 100.0f);
+	brick[0] = new CBrick(80.0f, 100.0f);
+	brick[1] = new CBrick(80.0f + 16.0f * 7, 100.0f);
+	brick[2] = new CBrick(80.0f + 16.0f * 9, 100.0f);
+	brick2[0] = new CBrick2(80.0f + 16.0f * 6, 100.0f);
+	brick2[1] = new CBrick2(80.0f + 16.0f * 8, 100.0f);
+	brick2[2] = new CBrick2(80.0f + 16.0f * 10, 100.0f);
+
+	cloud[0] = new CCloud(60, 60);
+	cloud[1] = new CCloud(140, 25);
+	cloud[2] = new CCloud(200, 40);
+	cloud[3] = new CCloud(220, 40);
+	cloud[4] = new CCloud(235, 40);
+
+	enemy = new CEnemy(281, 126);
+	pipe = new CPipe(280, 152);
+	mountain = new CMountain(100, 159);
+
+	for (int i = 0; i < 40; i++)
+	{
+		if (i < 20)
+			ground[i] = new CGround(10.0f + i * 15, 180.0f);
+		else
+			ground[i] = new CGround(10.0f + (i-20) * 15, 180.0f + 15);
+	}
+
 }
 
 /*
@@ -156,9 +249,27 @@ void Render()
 		FLOAT NewBlendFactor[4] = { 0,0,0,0 };
 		pD3DDevice->OMSetBlendState(g->GetAlphaBlending(), NewBlendFactor, 0xffffffff);
 
-		brick->Render();
-		mario->Render();
 
+		brick2[0]->Render();
+		brick2[1]->Render();
+		brick2[2]->Render();
+		brick[0]->Render();
+		brick[1]->Render();
+		brick[2]->Render();
+		cloud[0]->Render();
+		cloud[1]->Render();
+		cloud[2]->Render();
+		cloud[4]->Render();
+		cloud[3]->Render();
+		mountain->Render();
+
+		for (int i = 0; i < 40; i++)
+		{
+			ground[i]->Render();
+		}
+		enemy->Render();
+		pipe->Render();
+		mario->Render();
 		// Uncomment this line to see how to draw a porttion of a texture  
 		//g->Draw(10, 10, texMisc, 300, 117, 316, 133);
 
@@ -261,7 +372,7 @@ int WINAPI WinMain(
 ) {
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	CGame *game = CGame::GetInstance();
+	CGame* game = CGame::GetInstance();
 	game->Init(hWnd);
 
 	LoadResources();
