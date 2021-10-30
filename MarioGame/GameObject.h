@@ -49,8 +49,11 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {};
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-
-	//
+	virtual void DirectBlocking(int& left, int& top, int& right, int& bottom)
+	{
+		left = top = right = bottom = 1;
+	}
+	
 	// Collision ON or OFF ? This can change depending on object's state. For example: die
 	//
 	virtual int IsCollidable() { return 0; };
