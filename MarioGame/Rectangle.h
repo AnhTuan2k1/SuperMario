@@ -2,7 +2,6 @@
 #include "GameObject.h"
 
 
-#define ID_ANI_RECTANGLE 55559
 class CRectangle : public CGameObject
 {
 private:
