@@ -9,7 +9,7 @@ assets\pipe.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas
 # See OBJECT_TYPE constants in AssetIDs.h
 #hight = 189
 
@@ -26,9 +26,12 @@ assets\pipe.txt
 7	280	150	27	39	80000
 
 #Goomba
-2	280	150
+8	280	150
+8	450	90
 
-2	500	150
+8	510	150
+2	530	150
+8	560	150
 
 #BRICK
 1	70	120
@@ -42,7 +45,7 @@ assets\pipe.txt
 
 
 # MARIO
-0	20	10
+0	350	10
 
 
 
