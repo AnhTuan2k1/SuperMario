@@ -6,6 +6,7 @@ assets\goomba.txt
 assets\land.txt
 assets\rectangle.txt
 assets\pipe.txt
+assets\koopa.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -27,11 +28,14 @@ assets\pipe.txt
 
 #Goomba
 8	280	150
-8	450	90
+8	460	90
 
 8	510	150
 2	530	150
 8	560	150
+
+#Koopa
+3	450	90
 
 #BRICK
 1	70	120
