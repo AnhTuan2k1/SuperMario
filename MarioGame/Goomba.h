@@ -17,7 +17,7 @@
 
 #define ID_ANI_GOOMBA_WALKING 5000
 #define ID_ANI_GOOMBA_DIE 5001
-
+#define ID_ANI_GOOMBA_STATE_DIE_BYKOOPAS 5003
 
 #define WINGGOOMBA_STATE_WALKING 110
 
@@ -46,5 +46,6 @@ protected:
 
 public: 	
 	CGoomba(float x, float y, int state);
+	CGoomba(float x, float y);
 	virtual void SetState(int state);
 };

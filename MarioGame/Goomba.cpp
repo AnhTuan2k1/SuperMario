@@ -10,6 +10,14 @@ CGoomba::CGoomba(float x, float y, int state):CGameObject(x, y)
 	SetState(state);
 }
 
+CGoomba::CGoomba(float x, float y) :CGameObject(x, y)
+{
+	this->ax = 0;
+	this->ay = GOOMBA_GRAVITY;
+	die_start = -1;
+	SetState(GOOMBA_STATE_WALKING);
+}
+
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	if (state == GOOMBA_STATE_DIE)

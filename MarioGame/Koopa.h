@@ -4,8 +4,9 @@
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.03f
 #define KOOPA_RUNING_SPEED 0.2f
+#define KOOPA_JUMP_DEFLECT_SPEED 0.3f
 
-#define KOOPA_SHELL_TIMEOUT 3000
+#define KOOPA_SHELL_TIMEOUT 10000
 
 #define KOOPA_BBOX_WIDTH 15
 #define KOOPA_BBOX_WIDTH_SHELL 15
@@ -17,6 +18,8 @@
 #define KOOPA_STATE_SHELL 220
 //#define KOOPA_STATE_HIDE 330
 #define KOOPA_STATE_SHELL_RUNNING 440
+#define KOOPA_STATE_DIE_BYKOOPAS 550
+
 
 #define ID_ANI_KOOPA_WALKING 6000
 #define ID_ANI_KOOPA_SHELL 6001
@@ -36,7 +39,7 @@ class Koopa : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return (state != KOOPA_STATE_DIE_BYKOOPAS); };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
@@ -48,6 +51,5 @@ class Koopa : public CGameObject
 public:
 	Koopa(float x, float y, int state);
 	virtual void SetState(int state);
-    void SetState(int state, int direct);
+	void SetState(int state, int direct);
 };
-

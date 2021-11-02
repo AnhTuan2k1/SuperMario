@@ -10,7 +10,8 @@ void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
 		right = left + KOOPA_BBOX_WIDTH_SHELL;
 		bottom = top + KOOPA_BBOX_HEIGHT_SHELL;
-	}else if (state == KOOPA_STATE_SHELL_RUNNING)
+	}
+	else if (state == KOOPA_STATE_SHELL_RUNNING)
 	{
 		left = x - KOOPA_BBOX_WIDTH_SHELL / 2;
 		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
@@ -51,6 +52,12 @@ void Koopa::SetState(int state)
 		break;
 	case KOOPA_STATE_SHELL_RUNNING:
 		vx = -KOOPA_RUNING_SPEED;
+		break;
+	case KOOPA_STATE_DIE_BYKOOPAS:
+		vy = -KOOPA_JUMP_DEFLECT_SPEED;
+		vx = 0;
+		ax = 0;
+		break;
 	}
 }
 
@@ -70,8 +77,14 @@ void Koopa::SetState(int state, int direct)
 		vx = -KOOPA_WALKING_SPEED;
 		break;
 	case KOOPA_STATE_SHELL_RUNNING:
-		vx = -KOOPA_RUNING_SPEED*direct;
+		vx = -KOOPA_RUNING_SPEED * direct;
 		this->ay = KOOPA_GRAVITY;
+		break;
+	//case KOOPA_STATE_DIE_BYKOOPAS:
+	//	vy = -KOOPA_JUMP_DEFLECT_SPEED;
+	//	vx = 0;
+	//	ax = 0;
+	//	break;
 	}
 }
 
@@ -148,7 +161,11 @@ void Koopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 
 void Koopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 {
-
+	Koopa* koopas = dynamic_cast<Koopa*>(e->obj);
+	if (GetState() == KOOPA_STATE_SHELL_RUNNING)
+	{
+		koopas->SetState(KOOPA_STATE_DIE_BYKOOPAS);
+	}
 }
 
 void Koopa::OnCollisionWithMario(LPCOLLISIONEVENT e)
@@ -159,5 +176,4 @@ void Koopa::OnCollisionWithMario(LPCOLLISIONEVENT e)
 		return;
 	}
 }
-
 
