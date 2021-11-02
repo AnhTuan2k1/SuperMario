@@ -139,7 +139,11 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void Koopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
-
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	if (GetState() == KOOPA_STATE_SHELL_RUNNING)
+	{
+		goomba->SetState(GOOMBA_STATE_DIE_BYKOOPAS);
+	}
 }
 
 void Koopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
@@ -149,11 +153,11 @@ void Koopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 
 void Koopa::OnCollisionWithMario(LPCOLLISIONEVENT e)
 {
-	if (e->ny != 0)
+	if (e->ny >= 0)
 	{
 		vy = 0;
+		return;
 	}
-	return;
 }
 
 

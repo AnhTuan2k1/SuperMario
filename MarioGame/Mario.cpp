@@ -11,7 +11,7 @@
 
 #include "Collision.h"
 
-void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
@@ -19,7 +19,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	// reset untouchable timer if untouchable time has passed
-	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
+	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
@@ -32,7 +32,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CMario::OnNoCollision(DWORD dt)
 {
-	x += vx * dt;	
+	x += vx * dt;
 	y += vy * dt;
 	if (x < 0)
 	{
@@ -51,16 +51,16 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			isOnPlatform = true;
 			return;
 		}
-			
+
 
 		vy = 0;
 		if (e->ny < 0) isOnPlatform = true;
 	}
-	else 
-	if (e->nx != 0 && e->obj->IsBlocking())
-	{
-		vx = 0;
-	}
+	else
+		if (e->nx != 0 && e->obj->IsBlocking())
+		{
+			vx = 0;
+		}
 
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
@@ -83,13 +83,14 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		{
 			goomba->SetState(GOOMBA_STATE_WALKING);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}else
-
-		if (goomba->GetState() == GOOMBA_STATE_WALKING)
-		{
-			goomba->SetState(GOOMBA_STATE_DIE);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
+		else
+
+			if (goomba->GetState() == GOOMBA_STATE_WALKING)
+			{
+				goomba->SetState(GOOMBA_STATE_DIE);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
 	}
 	else // hit by Goomba
 	{
@@ -123,17 +124,20 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		{
 			koopa->SetState(KOOPA_STATE_SHELL);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			DebugOut(L">>> Mario 1 >>> \n");
 		}
 		else
 			if (koopa->GetState() == KOOPA_STATE_SHELL_RUNNING)
 			{
 				koopa->SetState(KOOPA_STATE_SHELL);
 				vy = -MARIO_JUMP_DEFLECT_SPEED;
+				DebugOut(L">>> Mario 2 >>> \n");
 			}
 			else
 				if (koopa->GetState() == KOOPA_STATE_SHELL)
 				{
 					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					DebugOut(L">>> Mario 3 >>> \n");
 				}
 	}
 	else // hit by Goomba
@@ -143,6 +147,8 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			if (koopa->GetState() == KOOPA_STATE_SHELL)
 			{
 				koopa->SetState(KOOPA_STATE_SHELL_RUNNING, 1);
+				DebugOut(L">>> Mario 4 >>> \n");
+				return;
 			}
 		}
 
@@ -151,10 +157,12 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			if (koopa->GetState() == KOOPA_STATE_SHELL)
 			{
 				koopa->SetState(KOOPA_STATE_SHELL_RUNNING, -1);
+				DebugOut(L">>> Mario 5 >>> \n");
+				return;
 			}
 		}
 
-		if (untouchable == 0)
+	    if (untouchable == 0)
 		{
 			if (koopa->GetState() != KOOPA_STATE_SHELL)
 			{
@@ -162,6 +170,7 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
+					DebugOut(L">>> Mario 6 >>> \n");
 				}
 				else
 				{
@@ -323,14 +332,14 @@ void CMario::Render()
 	animations->Get(aniId)->Render(x, y);
 
 	//RenderBoundingBox();
-	
+
 	DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)
 {
 	// DIE is the end state, cannot be changed! 
-	if (this->state == MARIO_STATE_DIE) return; 
+	if (this->state == MARIO_STATE_DIE) return;
 
 	switch (state)
 	{
@@ -379,7 +388,7 @@ void CMario::SetState(int state)
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
 			vx = 0; vy = 0.0f;
-			y +=MARIO_SIT_HEIGHT_ADJUST;
+			y += MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
 
@@ -407,9 +416,9 @@ void CMario::SetState(int state)
 	CGameObject::SetState(state);
 }
 
-void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (level==MARIO_LEVEL_BIG)
+	if (level == MARIO_LEVEL_BIG)
 	{
 		if (isSitting)
 		{
@@ -418,18 +427,18 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = left + MARIO_BIG_SITTING_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_SITTING_BBOX_HEIGHT;
 		}
-		else 
+		else
 		{
-			left = x - MARIO_BIG_BBOX_WIDTH/2;
-			top = y - MARIO_BIG_BBOX_HEIGHT/2;
+			left = x - MARIO_BIG_BBOX_WIDTH / 2;
+			top = y - MARIO_BIG_BBOX_HEIGHT / 2;
 			right = left + MARIO_BIG_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
 		}
 	}
 	else
 	{
-		left = x - MARIO_SMALL_BBOX_WIDTH/2;
-		top = y - MARIO_SMALL_BBOX_HEIGHT/2;
+		left = x - MARIO_SMALL_BBOX_WIDTH / 2;
+		top = y - MARIO_SMALL_BBOX_HEIGHT / 2;
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
 	}
@@ -444,4 +453,3 @@ void CMario::SetLevel(int l)
 	}
 	level = l;
 }
-

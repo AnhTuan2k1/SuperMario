@@ -1,5 +1,6 @@
 #include "Goomba.h"
 #include "Mario.h"
+#include "Koopa.h"
 
 CGoomba::CGoomba(float x, float y, int state):CGameObject(x, y)
 {
@@ -37,6 +38,7 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (!e->obj->IsBlocking()) return; 
 	if (dynamic_cast<CGoomba*>(e->obj)) return; 
+	if (dynamic_cast<Koopa*>(e->obj)) return;
 	if (dynamic_cast<CMario*>(e->obj))
 	{
 		if (e->ny != 0)
@@ -85,6 +87,10 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_WINGGOOMBA_WALKING;
 	}
+	else if (state == GOOMBA_STATE_DIE_BYKOOPAS)
+	{
+		
+	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
 	RenderBoundingBox();
@@ -102,10 +108,16 @@ void CGoomba::SetState(int state)
 			vy = 0;
 			ay = 0; 
 			break;
+		case GOOMBA_STATE_DIE_BYKOOPAS:
+			vy = -GOOMBA_JUMP_DEFLECT_SPEED;
+			vx = 0;
+			ax = 0;
+			break;
 
 		case WINGGOOMBA_STATE_WALKING:
 		case GOOMBA_STATE_WALKING: 
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
+
 	}
 }

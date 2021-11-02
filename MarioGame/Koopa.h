@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define KOOPA_GRAVITY 0.002f
-#define KOOPA_WALKING_SPEED 0.037f
+#define KOOPA_WALKING_SPEED 0.03f
 #define KOOPA_RUNING_SPEED 0.2f
 
 #define KOOPA_SHELL_TIMEOUT 3000
