@@ -119,7 +119,7 @@ void Koopa::Render()
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Koopa::OnNoCollision(DWORD dt)
