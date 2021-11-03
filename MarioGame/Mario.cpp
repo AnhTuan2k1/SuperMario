@@ -7,6 +7,7 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "Coin.h"
+#include "DCoin.h"
 //#include "Portal.h"
 
 #include "Collision.h"
@@ -64,6 +65,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
+	else if (dynamic_cast<DCoin*>(e->obj))
+		OnCollisionWithDCoin(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<Koopa*>(e->obj))
@@ -186,6 +189,19 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	coin++;
+}
+
+void CMario::OnCollisionWithDCoin(LPCOLLISIONEVENT e)
+{
+	if (e->ny > 0)
+	{
+		DCoin* dcoin = dynamic_cast<DCoin*>(e->obj);
+		if (dcoin->GetState() == DCOIN_STATE_STATIC)
+		{
+			dcoin->SetState(DCOIN_STATE_BOUNCE);
+			coin++;
+		}
+	}
 }
 
 //void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

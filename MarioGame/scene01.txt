@@ -7,24 +7,31 @@ assets\land.txt
 assets\rectangle.txt
 assets\pipe.txt
 assets\koopa.txt
+assets\coin.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas
-# See OBJECT_TYPE constants in AssetIDs.h
-#hight = 189
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin
+# See OBJECT_TYPE constants in AssetIDs.h 
+#hight = 189 
 
 #RECTANGLE
-6	210	123	38	66	71000
-6	190	150	39	39	70000
+6	210	156	38	66	71000
+6	190	169.5	39	39	70000
 
-6	431	96	53	67	75000
-6	390	123	53	66	73000
-6	340	150	65	38	72000
-6	432	163	78	26	74000
+6	451	129	53	67	75000
+6	417	156	53	66	73000
+6	370	169	65	38	72000
+6	472	176	78	26	74000
 
 #PIPE
-7	280	150	27	39	80000
+7	280	170	27	39	80000
+
+#DCOIN
+9	70	120
+
+#CCOIN
+4	200	120
 
 #Goomba
 8	280	150
@@ -49,7 +56,7 @@ assets\koopa.txt
 
 
 # MARIO
-0	350	10
+0	270	10
 
 
 
