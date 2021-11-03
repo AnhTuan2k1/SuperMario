@@ -9,10 +9,11 @@ assets\pipe.txt
 assets\koopa.txt
 assets\coin.txt
 assets\questionbrick.txt
+assets\mushroom.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
 # See OBJECT_TYPE constants in AssetIDs.h 
 #hight = 189 
 
@@ -34,6 +35,17 @@ assets\questionbrick.txt
 #CCOIN
 4	200	120
 
+#BRICK
+1	70	120
+1	86	120
+
+1	120	140
+#Mushroom
+11	140	120
+
+#QuestionBrick
+10	140	120
+
 #Goomba
 8	280	150
 8	460	90
@@ -44,15 +56,6 @@ assets\questionbrick.txt
 #Koopa
 3	450	90
 3	560	150
-
-#BRICK
-1	70	120
-1	86	120
-
-1	120	140
-
-#QuestionBrick
-10	102	120
 
 #Platform
 5	0	195	30	15	24	60000	60000	60000

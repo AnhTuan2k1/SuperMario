@@ -5,22 +5,23 @@
 #include "Animations.h"
 
 #define ID_ANI_QUESTION_BRICK 7000
+#define ID_ANI_QUESTION_BRICK_BOUNCED 7100
 
-#define QUESTION_BRICK_BBOX_WIDTH 15
-#define QUESTION_BRICK_BBOX_HEIGHT 15
+#define QUESTION_BRICK_BBOX_WIDTH 16
+#define QUESTION_BRICK_BBOX_HEIGHT 16
 
-#define QUESTION_BRICK_HEIGHT_BOUNCE 10
+#define QUESTION_BRICK_HEIGHT_BOUNCE 7
 #define QUESTION_BRICK_SPEED_BOUNCE 0.01f
 
 #define QUESTION_BRICK_STATE_BOUNCE 15
 #define QUESTION_BRICK_STATE_STATIC 14
+#define QUESTION_BRICK_STATE_BOUNCED 13
 
 
 class QuestionBrick : public CGameObject {
 
 	float ay;
 	int y_initial;
-    bool isbounce;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
 public:
@@ -29,7 +30,6 @@ public:
         y_initial = y;
         ay = 0;
         SetState(QUESTION_BRICK_STATE_STATIC);
-        isbounce = false;
     }
     virtual void OnNoCollision(DWORD dt);
     virtual void SetState(int state);

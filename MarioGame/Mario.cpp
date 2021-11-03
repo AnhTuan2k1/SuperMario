@@ -9,6 +9,7 @@
 #include "Coin.h"
 #include "DCoin.h"
 #include "QuestionBrick.h"
+#include "Mushroom.h"
 //#include "Portal.h"
 
 #include "Collision.h"
@@ -74,6 +75,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopas(e);
 	else if (dynamic_cast<QuestionBrick*>(e->obj))
 		OnCollisionWithQuestionBrick(e);
+	else if (dynamic_cast<Mushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
 
 	//else if (dynamic_cast<CPortal*>(e->obj))
 	//	OnCollisionWithPortal(e);
@@ -218,6 +221,30 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 			questionBrick->SetState(QUESTION_BRICK_STATE_BOUNCE);
 		}
 	}
+}
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
+	if (e->ny > 0) 
+	{
+		if (level != MARIO_LEVEL_SMALL)
+		{
+			mushroom->Delete();
+		}
+		else if (mushroom->GetState() == MUSHROOM_STATE_HIDE)
+		{
+			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		}
+	}
+
+	if (mushroom->GetState() == MUSHROOM_STATE_MOVING && level == MARIO_LEVEL_SMALL)
+	{
+		SetLevel(MARIO_LEVEL_BIG);
+		mushroom->Delete();
+	}
+		
+	
 }
 
 //void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
