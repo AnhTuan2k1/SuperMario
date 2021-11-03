@@ -8,6 +8,7 @@
 #include "Koopa.h"
 #include "Coin.h"
 #include "DCoin.h"
+#include "QuestionBrick.h"
 //#include "Portal.h"
 
 #include "Collision.h"
@@ -71,6 +72,9 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<Koopa*>(e->obj))
 		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<QuestionBrick*>(e->obj))
+		OnCollisionWithQuestionBrick(e);
+
 	//else if (dynamic_cast<CPortal*>(e->obj))
 	//	OnCollisionWithPortal(e);
 }
@@ -200,6 +204,18 @@ void CMario::OnCollisionWithDCoin(LPCOLLISIONEVENT e)
 		{
 			dcoin->SetState(DCOIN_STATE_BOUNCE);
 			coin++;
+		}
+	}
+}
+
+void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
+{
+	if (e->ny > 0)
+	{
+		QuestionBrick* questionBrick = dynamic_cast<QuestionBrick*>(e->obj);
+		if (questionBrick->GetState() == QUESTION_BRICK_STATE_STATIC)
+		{
+			questionBrick->SetState(QUESTION_BRICK_STATE_BOUNCE);
 		}
 	}
 }

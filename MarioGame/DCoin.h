@@ -1,7 +1,7 @@
 #pragma once
 #include "Coin.h"
 
-#define DCOIN_HEIGHT_BOUNCE 32
+#define DCOIN_HEIGHT_BOUNCE 48
 #define DCOIN_BOUNCE_TIMEOUT 300
 #define DCOIN_BOUNCE_TIMES 10
 #define DCOIN_SPEED_BOUNCE 0.01f
@@ -15,7 +15,7 @@ class DCoin :
     float ay;
     ULONGLONG bounce_start;
     int bounce_times;
-    int y_initial;
+    float y_initial;
     virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
 public:

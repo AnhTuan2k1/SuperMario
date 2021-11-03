@@ -8,10 +8,11 @@ assets\rectangle.txt
 assets\pipe.txt
 assets\koopa.txt
 assets\coin.txt
+assets\questionbrick.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick
 # See OBJECT_TYPE constants in AssetIDs.h 
 #hight = 189 
 
@@ -49,6 +50,9 @@ assets\coin.txt
 1	86	120
 
 1	120	140
+
+#QuestionBrick
+10	102	120
 
 #Platform
 5	0	195	30	15	24	60000	60000	60000

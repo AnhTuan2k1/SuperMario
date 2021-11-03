@@ -13,6 +13,7 @@
 #include "Pipe.h"
 #include "Koopa.h"
 #include "DCoin.h"
+#include "QuestionBrick.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -125,9 +126,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_KOOPAS: obj = new Koopa(x, y, KOOPA_STATE_WALKING); break;
 
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
+	case OBJECT_TYPE_QUESTION_BRICK: obj = new QuestionBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
-	case OBJECT_TYPE_DCOIN:
-		obj = new DCoin(x, y); break;
+	case OBJECT_TYPE_DCOIN: obj = new DCoin(x, y); break;
 
 	case OBJECT_TYPE_PIPE: obj = new CPipe(x, y); break;
 
