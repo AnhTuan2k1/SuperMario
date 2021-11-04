@@ -15,6 +15,7 @@
 #include "DCoin.h"
 #include "QuestionBrick.h"
 #include "Mushroom.h"
+#include "Spawn.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -145,6 +146,32 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_SPAWN:
+	{
+		
+		vector<LPGAMEOBJECT> objectsSpawn;
+
+		CGameObject* objSPawn = NULL;
+		for (int i = 3; i < tokens.size()-1;)
+		{
+			int typetype = (int)atof(tokens[i].c_str());
+			float xxx = (float)atof(tokens[i+1].c_str());
+			float yyy = (float)atof(tokens[i+2].c_str());
+			switch (typetype)
+			{
+			case OBJECT_TYPE_GOOMBA: objSPawn = new CGoomba(xxx, yyy); break;
+			case OBJECT_TYPE_WINGGOOMBA: objSPawn = new CGoomba(xxx, yyy, WINGGOOMBA_STATE_WALKING); break;
+			case OBJECT_TYPE_KOOPAS: objSPawn = new Koopa(xxx, yyy, KOOPA_STATE_WALKING); break;
+			}
+			objectsSpawn.push_back(objSPawn);
+
+			i += 3;
+
+		}	
+		obj = new Spawn(x, y, objectsSpawn);
+		break;
+	}
+
 	case OBJECT_TYPE_PLATFORM:
 	{
 
@@ -184,6 +211,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 
 	objects.push_back(obj);
+}
+
+void LoadPawn()
+{
+
 }
 
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
@@ -256,6 +288,7 @@ void CPlayScene::Load()
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
 
+
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -324,6 +357,11 @@ void CPlayScene::Unload()
 	player = NULL;
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
+}
+
+void CPlayScene::AddObject(CGameObject* object)
+{
+	objects.push_back(object);
 }
 
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }

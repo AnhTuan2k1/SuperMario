@@ -82,9 +82,9 @@ void Mushroom::SetState(int state)
 	case MUSHROOM_STATE_MOVING:
 		vy = 0;
 		this->ay = MUSHROOM_GRAVITY;
-		/*if (GetTickCount64() % 2 == 0)
+		if (GetTickCount64() % 2 == 0)
 			vx = -MUSHROOM_SPEED;
-		else*/ vx = MUSHROOM_SPEED;
+		else vx = MUSHROOM_SPEED;
 		
 		DebugOut(L">>> MUSHROOM 2 >>> \n");
 		break;

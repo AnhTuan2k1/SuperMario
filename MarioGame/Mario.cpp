@@ -13,6 +13,7 @@
 //#include "Portal.h"
 
 #include "Collision.h"
+#include "Spawn.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -77,6 +78,9 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<Mushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
+
+	else if (dynamic_cast<Spawn*>(e->obj))
+		OnCollisionWithSpawn(e);
 
 	//else if (dynamic_cast<CPortal*>(e->obj))
 	//	OnCollisionWithPortal(e);
@@ -245,6 +249,15 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	}
 		
 	
+}
+
+void CMario::OnCollisionWithSpawn(LPCOLLISIONEVENT e)
+{
+	Spawn* spawn = dynamic_cast<Spawn*>(e->obj);
+
+	spawn->CreateEnemies();
+	spawn->Delete();
+	DebugOut(L">>>Spawn OK>>> \n");
 }
 
 //void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

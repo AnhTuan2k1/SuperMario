@@ -10,12 +10,16 @@ assets\koopa.txt
 assets\coin.txt
 assets\questionbrick.txt
 assets\mushroom.txt
+assets\spawn.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
 # See OBJECT_TYPE constants in AssetIDs.h   x    y    width   height
 #hight = 189 
+
+#Pawn
+12	290	20	2	280	150
 
 #RECTANGLE
 6	210	156	38	66	71000
@@ -80,4 +84,4 @@ assets\mushroom.txt
 5	1080	195	30	15	14	60000	60000	60000
 
 # MARIO
-0	10	10
+0	1005	10

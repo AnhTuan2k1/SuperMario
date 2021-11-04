@@ -32,6 +32,7 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	virtual void AddObject(CGameObject* object);
 
 	LPGAMEOBJECT GetPlayer() { return player; }
 
