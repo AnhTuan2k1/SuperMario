@@ -12,6 +12,7 @@
 class DCoin :
     public CCoin
 {
+protected:
     float ay;
     ULONGLONG bounce_start;
     int bounce_times;
@@ -31,3 +32,16 @@ public:
     virtual void SetState(int state);
 };
 
+class D1Coin : public DCoin
+{
+
+public:
+    D1Coin(float x, float y) : DCoin(x, y)
+    {
+        y_initial = y;
+        ay = 0;
+        bounce_start = -1;
+        bounce_times = 1;
+        SetState(DCOIN_STATE_STATIC);
+    }
+};

@@ -83,8 +83,8 @@ void Mushroom::SetState(int state)
 		vy = 0;
 		this->ay = MUSHROOM_GRAVITY;
 		if (GetTickCount64() % 2 == 0)
-			vx = -MUSHROOM_SPEED;
-		else vx = MUSHROOM_SPEED;
+			vx = MUSHROOM_SPEED;
+		else vx = -MUSHROOM_SPEED;
 		
 		DebugOut(L">>> MUSHROOM 2 >>> \n");
 		break;

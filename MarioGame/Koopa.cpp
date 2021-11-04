@@ -27,13 +27,6 @@ void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	}
 }
 
-Koopa::Koopa(float x, float y, int state)
-{
-	this->ax = 0;
-	this->ay = KOOPA_GRAVITY;
-	hide_start = -1;
-	SetState(state);
-}
 
 void Koopa::SetState(int state)
 {

@@ -49,7 +49,13 @@ class Koopa : public CGameObject
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithMario(LPCOLLISIONEVENT e);
 public:
-	Koopa(float x, float y, int state);
+	Koopa(float x, float y) : CGameObject(x, y) 
+	{
+		this->ax = 0;
+		this->ay = KOOPA_GRAVITY;
+		hide_start = -1;
+		SetState(KOOPA_STATE_WALKING);
+	}
 	virtual void SetState(int state);
 	void SetState(int state, int direct);
 };

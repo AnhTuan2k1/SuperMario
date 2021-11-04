@@ -15,13 +15,13 @@ assets\spawn.txt
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
+# 13= D1Coin
 # See OBJECT_TYPE constants in AssetIDs.h   x    y    width   height
 #hight = 189 
 
-#Pawn
-12	290	20	2	280	150
 
 #RECTANGLE
+6	210	156	38	66	71000
 6	210	156	38	66	71000
 6	190	169.5	39	39	70000
 
@@ -33,6 +33,11 @@ assets\spawn.txt
 6	1360	149	93	79	78000
 6	1335	162	93	53	77000
 6	1310	176	92	26	76000
+
+#Pawn
+12	290	20	2	280	150	2	530	150	8	460	90	3	450	90
+12	620	20	2	870	150	2	920	150	8	1000	150
+12	1010	20	3	1310	70	3	1355	70	3	1400	70
 
 #PIPE
 7	280	170	27	39	80000
@@ -57,24 +62,19 @@ assets\spawn.txt
 
 #QuestionBrick
 10	140	120
+
+13	560	170
 10	560	170
+
+13	610	135
 10	610	135
+
+13	1455	140
 10	1455	140
 #Goomba
 2	280	150
-8	460	90
-
-2	530	150
-
-2	880	150
-2	930	150
-8	1000	150
 
 #Koopa
-3	450	90
-3	1310	70
-3	1355	70
-3	1400	70
 
 #Platform
 5	0	195	30	15	34	60000	60000	60000
@@ -84,4 +84,4 @@ assets\spawn.txt
 5	1080	195	30	15	14	60000	60000	60000
 
 # MARIO
-0	1005	10
+0	10	10

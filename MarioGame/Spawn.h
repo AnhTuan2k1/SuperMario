@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define SPAWN_HIGH 310
-#define SPAWN_WIDTH 100
+#define SPAWN_WIDTH 5
 #define SPAWN_STATE_INITIALIZED 235
 #define SPAWN_STATE_UNINITIALIZED 236
 #define ID_SPRITE_SPAWN 12345
@@ -13,7 +13,7 @@ class Spawn : public CGameObject
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 
 	virtual int IsCollidable() { return 1; };
-	int IsBlocking() { return 1; }
+	int IsBlocking() { return 0; }
 
 public:
 	Spawn(float x, float y, vector<LPGAMEOBJECT> objects)
@@ -24,7 +24,7 @@ public:
 	}
 	CGameObject* getObjectAt(int index) { return objects[index]; }
 	void Update(DWORD dt) {}
-	void Render();
+	virtual void Render();
 	void CreateEnemies();
 };
 
