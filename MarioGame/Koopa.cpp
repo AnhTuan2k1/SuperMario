@@ -1,6 +1,7 @@
 #include "Koopa.h"
 #include "Goomba.h"
 #include "Mario.h"
+#include "RedKoopas.h"
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -50,6 +51,7 @@ void Koopa::SetState(int state)
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		vx = 0;
 		ax = 0;
+		ay = KOOPA_GRAVITY;
 		break;
 	}
 }
@@ -141,6 +143,7 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CGoomba*>(e->obj)) OnCollisionWithGoomba(e);
 	if (dynamic_cast<Koopa*>(e->obj)) OnCollisionWithKoopa(e);
 	if (dynamic_cast<CMario*>(e->obj)) OnCollisionWithMario(e);
+	if (dynamic_cast<RedKoopas*>(e->obj)) OnCollisionWithRedKoopa(e);
 }
 
 void Koopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -163,10 +166,19 @@ void Koopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 
 void Koopa::OnCollisionWithMario(LPCOLLISIONEVENT e)
 {
-	if (e->ny >= 0)
+	//if (e->ny >= 0)
+	//{
+	//	vy = 0;
+	//	return;
+	//}
+}
+
+void Koopa::OnCollisionWithRedKoopa(LPCOLLISIONEVENT e)
+{
+	RedKoopas* redkoopas = dynamic_cast<RedKoopas*>(e->obj);
+	if (GetState() == REDKOOPA_STATE_SHELL_RUNNING)
 	{
-		vy = 0;
-		return;
+		redkoopas->SetState(REDKOOPA_STATE_DIE_BYKOOPAS);
 	}
 }
 

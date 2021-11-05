@@ -48,6 +48,7 @@ class Koopa : public CGameObject
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithMario(LPCOLLISIONEVENT e);
+	void OnCollisionWithRedKoopa(LPCOLLISIONEVENT e);
 public:
 	Koopa(float x, float y) : CGameObject(x, y) 
 	{
@@ -59,3 +60,55 @@ public:
 	virtual void SetState(int state);
 	void SetState(int state, int direct);
 };
+
+//class RedKoopa : public Koopa
+//{
+//
+//	float rectangleX;
+//	float rectangleWidth;
+//	bool isGetPosition;
+//
+//	virtual void Render()
+//	{
+//		int aniId = ID_ANI_REDKOOPA_WALKING_LEFT;
+//		if (state == REDKOOPA_STATE_WALKING_RIGHT)
+//		{
+//			aniId = ID_ANI_REDKOOPA_WALKING_RIGHT;
+//		}
+//
+//		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+//	}
+//
+//public:
+//	RedKoopa(float x, float y) : Koopa(x, y)
+//	{
+//		SetState(REDKOOPA_STATE_WALKING_LEFT);
+//		isGetPosition = false;
+//		rectangleX = 0;
+//		rectangleWidth = 0;
+//	}
+//
+//
+//
+//	virtual void OnCollisionWith(LPCOLLISIONEVENT e)
+//	{
+//		if (e->ny != 0 && e->obj->IsBlocking())
+//		{
+//			if (e->ny < 0 && e->obj->IsBlocking())
+//			{
+//				vy = 0;
+//				return;
+//			}
+//			vy = 0;
+//		}
+//		else
+//			if (e->nx != 0 && e->obj->IsBlocking())
+//			{
+//				vx = -vx;
+//			}
+//		
+//
+//	}
+//	
+//
+//};

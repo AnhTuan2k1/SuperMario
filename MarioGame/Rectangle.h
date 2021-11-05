@@ -19,6 +19,9 @@ public:
 	void Render();
 	void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
+
+	float getX() { return x; }
+	float getWidth() { return width; }
 	void DirectBlocking(int& left, int& top, int& right, int& bottom)
 	{
 		left = right = bottom = 0;

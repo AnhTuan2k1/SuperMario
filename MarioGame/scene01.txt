@@ -11,11 +11,13 @@ assets\coin.txt
 assets\questionbrick.txt
 assets\mushroom.txt
 assets\spawn.txt
-#
+# sprite for koopa
+# brick bounces and breaks
+# collide between koopa and brick
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
-# 13= D1Coin
+# 13= D1Coin    14 = red koopa
 # See OBJECT_TYPE constants in AssetIDs.h   x    y    width   height
 #hight = 189 
 
@@ -37,7 +39,7 @@ assets\spawn.txt
 #Pawn
 12	290	20	2	280	150	2	530	150	8	460	90	3	450	90
 12	620	20	2	870	150	2	920	150	8	1000	150
-12	1010	20	3	1310	70	3	1355	70	3	1400	70
+12	1010	20	3	1310	70	3	1355	70	3	1400	70	14	1360	70
 
 #PIPE
 7	280	170	27	39	80000
@@ -72,7 +74,7 @@ assets\spawn.txt
 13	1455	140
 10	1455	140
 #Goomba
-2	280	150
+2	250	130
 
 #Koopa
 

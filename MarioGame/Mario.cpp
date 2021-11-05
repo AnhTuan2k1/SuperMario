@@ -14,6 +14,7 @@
 
 #include "Collision.h"
 #include "Spawn.h"
+#include "RedKoopas.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -78,6 +79,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBrick(e);
 	else if (dynamic_cast<Mushroom*>(e->obj))
 		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<RedKoopas*>(e->obj))
+		OnCollisionWithRedKoopas(e);
 
 	else if (dynamic_cast<Spawn*>(e->obj))
 		OnCollisionWithSpawn(e);
@@ -258,6 +261,76 @@ void CMario::OnCollisionWithSpawn(LPCOLLISIONEVENT e)
 	spawn->CreateEnemies();
 	spawn->Delete();
 	DebugOut(L">>>Spawn OK>>> \n");
+}
+
+void CMario::OnCollisionWithRedKoopas(LPCOLLISIONEVENT e)
+{
+	RedKoopas* redkoopa = dynamic_cast<RedKoopas*>(e->obj);
+
+	// jump on top >> kill Koopa and deflect a bit 
+	if (e->ny < 0)
+	{
+		if (redkoopa->GetState() == REDKOOPA_STATE_WALKING_LEFT || redkoopa->GetState() == REDKOOPA_STATE_WALKING_RIGHT)
+		{
+			redkoopa->SetState(REDKOOPA_STATE_SHELL);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			DebugOut(L">>> Mario 1 >>> \n");
+		}
+		else
+			if (redkoopa->GetState() == REDKOOPA_STATE_SHELL_RUNNING)
+			{
+				redkoopa->SetState(REDKOOPA_STATE_SHELL);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+				DebugOut(L">>> Mario 2 >>> \n");
+			}
+			else
+				if (redkoopa->GetState() == REDKOOPA_STATE_SHELL)
+				{
+					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					DebugOut(L">>> Mario 3 >>> \n");
+				}
+	}
+	else // hit by Koopa
+	{
+		if (e->nx > 0)
+		{
+			if (redkoopa->GetState() == REDKOOPA_STATE_SHELL)
+			{
+				redkoopa->SetState(REDKOOPA_STATE_SHELL_RUNNING, 1);
+				DebugOut(L">>> Mario 4 >>> \n");
+				return;
+			}
+		}
+
+		else if (e->nx < 0)
+		{
+			if (redkoopa->GetState() == REDKOOPA_STATE_SHELL)
+			{
+				redkoopa->SetState(REDKOOPA_STATE_SHELL_RUNNING, -1);
+				DebugOut(L">>> Mario 5 >>> \n");
+				return;
+			}
+		}
+
+		if (untouchable == 0)
+		{
+			if (redkoopa->GetState() == REDKOOPA_STATE_WALKING_LEFT || redkoopa->GetState() == REDKOOPA_STATE_WALKING_RIGHT
+				|| redkoopa->GetState() == REDKOOPA_STATE_SHELL_RUNNING)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+					DebugOut(L">>> Mario 6 >>> \n");
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
 }
 
 //void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
