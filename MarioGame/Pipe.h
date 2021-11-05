@@ -2,8 +2,8 @@
 
 #include "GameObject.h"
 
-#define PIPE_WIDTH 27
-#define PIPE_HIGHT 39
+#define PIPE_WIDTH 31
+#define PIPE_HIGHT 47
 #define ID_SPRITE_PIPE 80000
 class CPipe : public  CGameObject
 {
