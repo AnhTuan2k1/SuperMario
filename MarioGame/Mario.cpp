@@ -15,6 +15,7 @@
 #include "Collision.h"
 #include "Spawn.h"
 #include "RedKoopas.h"
+#include "Brick.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -81,6 +82,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<RedKoopas*>(e->obj))
 		OnCollisionWithRedKoopas(e);
+	else if (dynamic_cast<CBrick*>(e->obj))
+		OnCollisionWithBrick(e);
 
 	else if (dynamic_cast<Spawn*>(e->obj))
 		OnCollisionWithSpawn(e);
@@ -226,6 +229,19 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 		if (questionBrick->GetState() == QUESTION_BRICK_STATE_STATIC)
 		{
 			questionBrick->SetState(QUESTION_BRICK_STATE_BOUNCE);
+		}
+	}
+}
+
+void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	if (e->ny > 0)
+	{
+		CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+		if (brick->GetBounceTimes() == 0) return;
+		if (brick->GetState() == BRICK_STATE_STATIC)
+		{
+			brick->SetState(BRICK_STATE_BOUNCE);
 		}
 	}
 }
