@@ -49,6 +49,8 @@ class Koopa : public CGameObject
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithMario(LPCOLLISIONEVENT e);
 	void OnCollisionWithRedKoopa(LPCOLLISIONEVENT e);
+	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 public:
 	Koopa(float x, float y) : CGameObject(x, y) 
 	{

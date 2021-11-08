@@ -26,7 +26,7 @@
 class CBrick : public CGameObject {
 
 	float ay;
-	int y_initial;
+	float y_initial;
 	int bounce_times;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 

@@ -53,6 +53,11 @@ protected:
 	void OnCollisionWithMario(LPCOLLISIONEVENT e);
 	void OnCollisionWithRedKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithRectangle(LPCOLLISIONEVENT e);
+	void OnCollisionWithPlatform(LPCOLLISIONEVENT e);
+	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
+	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 public:
 	RedKoopas(float x, float y) : CGameObject(x, y)
 	{

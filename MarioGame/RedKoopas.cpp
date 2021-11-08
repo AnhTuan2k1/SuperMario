@@ -4,6 +4,11 @@
 #include "Mario.h"
 #include "Koopa.h"
 #include "Rectangle.h"
+#include "QuestionBrick.h"
+#include "Mushroom.h"
+#include "Platform.h"
+#include "Brick.h"
+#include "Pipe.h"
 
 void RedKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -115,7 +120,7 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (vx < 0)
 		{
-			if (x < rectangleX - rectangleWidth/2)
+			if (x < rectangleX)
 			{
 				SetState(REDKOOPA_STATE_WALKING_RIGHT);
 				DebugOut(L">>> RedKoopas 6 >>> \n");
@@ -123,7 +128,7 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else
 		{
-			if (x > rectangleX + rectangleWidth/2)
+			if (x > rectangleWidth)
 			{
 				SetState(REDKOOPA_STATE_WALKING_LEFT);
 				DebugOut(L">>> RedKoopas 7 >>> \n");
@@ -165,7 +170,12 @@ void RedKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<CRectangle*>(e->obj))
 		OnCollisionWithRectangle(e);
-
+	if (dynamic_cast<CPlatform*>(e->obj))
+		OnCollisionWithPlatform(e);
+	if (dynamic_cast<CBrick*>(e->obj))
+		OnCollisionWithRectangle(e);
+	if (dynamic_cast<CPipe*>(e->obj))
+		OnCollisionWithPipe(e);
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		if (e->ny < 0 && e->obj->IsBlocking())
@@ -183,12 +193,16 @@ void RedKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (dynamic_cast<CGoomba*>(e->obj)) 
 		OnCollisionWithGoomba(e);
-	else if (dynamic_cast<Koopa*>(e->obj))
+	 if (dynamic_cast<Koopa*>(e->obj))
 		OnCollisionWithKoopa(e);
-	else if (dynamic_cast<CMario*>(e->obj)) 
+	 if (dynamic_cast<CMario*>(e->obj)) 
 		OnCollisionWithMario(e);
-	else if (dynamic_cast<RedKoopas*>(e->obj)) 
+	 if (dynamic_cast<RedKoopas*>(e->obj)) 
 		OnCollisionWithRedKoopa(e);
+	 if (dynamic_cast<QuestionBrick*>(e->obj)) 
+		OnCollisionWithQuestionBrick(e);
+	 if (dynamic_cast<Mushroom*>(e->obj))
+		 OnCollisionWithMushroom(e);
 }
 
 void RedKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -229,12 +243,75 @@ void RedKoopas::OnCollisionWithRedKoopa(LPCOLLISIONEVENT e)
 
 void RedKoopas::OnCollisionWithRectangle(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CRectangle*>(e->obj))
+	CRectangle* rectangle = dynamic_cast<CRectangle*>(e->obj);
+	float left, top, bottom, right;
+
+	rectangle->GetBoundingBox(left, top, right, bottom);
+	rectangleX = left;
+	rectangleWidth = right;
+}
+
+void RedKoopas::OnCollisionWithPlatform(LPCOLLISIONEVENT e)
+{
+	CPlatform* platform = dynamic_cast<CPlatform*>(e->obj);
+	float left,top, bottom, right;
+
+	platform->GetBoundingBox(left, top, right, bottom);
+	rectangleX = left;
+	rectangleWidth = right;
+}
+
+void RedKoopas::OnCollisionWithPipe(LPCOLLISIONEVENT e)
+{
+	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
+	float left, top, bottom, right;
+
+	pipe->GetBoundingBox(left, top, right, bottom);
+	rectangleX = left;
+	rectangleWidth = right;
+}
+
+void RedKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+	float left, top, bottom, right;
+
+	brick->GetBoundingBox(left, top, right, bottom);
+	rectangleX = left;
+	rectangleWidth = right;
+}
+
+void RedKoopas::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
+{
+	QuestionBrick* questionBrick = dynamic_cast<QuestionBrick*>(e->obj);
+	if (questionBrick->GetState() == QUESTION_BRICK_STATE_STATIC && GetState() == KOOPA_STATE_SHELL_RUNNING)
 	{
-		CRectangle* rectangle = dynamic_cast<CRectangle*>(e->obj);
-		rectangleX = rectangle->getX();
-		rectangleWidth = rectangle->getWidth();
-	}	
+		questionBrick->SetState(QUESTION_BRICK_STATE_BOUNCED);
+	}
+}
+
+void RedKoopas::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	/*Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
+
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && nx != 0)
+	{
+		if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->GetPlayer()))
+		{
+			CMario* mario = dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->GetPlayer());
+			if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			{
+				mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+			}
+			if (mario->GetLevel() == MARIO_LEVEL_BIG)
+			{
+				mushroom->Delete();
+			}
+		}
+		
+
+		
+	}*/
 }
 
 

@@ -2,6 +2,9 @@
 #include "Goomba.h"
 #include "Mario.h"
 #include "RedKoopas.h"
+#include "Brick.h"
+#include "QuestionBrick.h"
+#include "Mushroom.h"
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -144,6 +147,8 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<Koopa*>(e->obj)) OnCollisionWithKoopa(e);
 	if (dynamic_cast<CMario*>(e->obj)) OnCollisionWithMario(e);
 	if (dynamic_cast<RedKoopas*>(e->obj)) OnCollisionWithRedKoopa(e);
+	if (dynamic_cast<QuestionBrick*>(e->obj)) OnCollisionWithQuestionBrick(e);
+	if (dynamic_cast<Mushroom*>(e->obj)) OnCollisionWithMushroom(e);
 }
 
 void Koopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -179,6 +184,25 @@ void Koopa::OnCollisionWithRedKoopa(LPCOLLISIONEVENT e)
 	if (GetState() == REDKOOPA_STATE_SHELL_RUNNING)
 	{
 		redkoopas->SetState(REDKOOPA_STATE_DIE_BYKOOPAS);
+	}
+}
+
+void Koopa::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
+{
+	QuestionBrick* questionBrick = dynamic_cast<QuestionBrick*>(e->obj);
+	if (questionBrick->GetState() == QUESTION_BRICK_STATE_STATIC && GetState() == KOOPA_STATE_SHELL_RUNNING)
+	{
+		questionBrick->SetState(QUESTION_BRICK_STATE_BOUNCED);
+	}
+}
+
+void Koopa::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
+
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && nx != 0)
+	{
+		mushroom->SetState(MUSHROOM_STATE_BOUNCE);
 	}
 }
 

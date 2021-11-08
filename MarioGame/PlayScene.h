@@ -34,7 +34,7 @@ public:
 	virtual void Unload();
 	virtual void AddObject(CGameObject* object);
 
-	LPGAMEOBJECT GetPlayer() { return player; }
+	virtual LPGAMEOBJECT GetPlayer() { return player; }
 
 	void Clear();
 	void PurgeDeletedObjects();
