@@ -130,6 +130,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_REDKOOPAS: obj = new RedKoopas(x, y); break;
 
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
+	case OBJECT_TYPE_BRICK_BREAK: obj = new CBrick(x, y, true); break;
 	case OBJECT_TYPE_QUESTION_BRICK: obj = new QuestionBrick(x, y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_DCOIN: obj = new DCoin(x, y); break;

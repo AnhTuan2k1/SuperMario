@@ -65,6 +65,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithRedKoopas(e);
 	else if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
+	if (dynamic_cast<CBrick*>(e->obj))
+		OnCollisionWithBrick(e);
 
 	else if (dynamic_cast<Spawn*>(e->obj))
 		OnCollisionWithSpawn(e);
@@ -236,19 +238,39 @@ void CMario::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 {
 	if (e->ny > 0)
-	{
+	{		
 		CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+		if (brick->Isbreak())
+		{
+			if (GetLevel() == MARIO_LEVEL_SMALL)
+			{
+				brick->SetState(BRICK_STATE_BOUNCE);
+			}
+			else
+			{
+				brick->SetState(BRICK_STATE_BREAK);				
+			}
+		}
+
+
 		if (brick->GetBounceTimes() == 0) return;
 		if (brick->GetState() == BRICK_STATE_STATIC)
 		{
 			brick->SetState(BRICK_STATE_BOUNCE);
-		}
+		}		
 	}
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
+
+	if (mushroom->GetState() == MUSHROOM_STATE_MOVING && level == MARIO_LEVEL_SMALL)
+	{
+		SetLevel(MARIO_LEVEL_BIG);
+		mushroom->Delete();
+	}
+
 	if (e->ny > 0) 
 	{
 		if (level != MARIO_LEVEL_SMALL)
@@ -260,13 +282,6 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
 		}
 	}
-
-	if (mushroom->GetState() == MUSHROOM_STATE_MOVING && level == MARIO_LEVEL_SMALL)
-	{
-		SetLevel(MARIO_LEVEL_BIG);
-		mushroom->Delete();
-	}
-		
 	
 }
 

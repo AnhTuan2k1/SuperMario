@@ -279,6 +279,15 @@ void RedKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	brick->GetBoundingBox(left, top, right, bottom);
 	rectangleX = left;
 	rectangleWidth = right;
+
+	if (e->nx != 0)
+	{
+		if (GetState() == REDKOOPA_STATE_SHELL_RUNNING && brick->Isbreak())
+		{
+			brick->SetState(BRICK_STATE_BREAK);
+		}
+	}
+
 }
 
 void RedKoopas::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)

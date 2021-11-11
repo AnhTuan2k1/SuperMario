@@ -21,7 +21,7 @@
 class QuestionBrick : public CGameObject {
 
 	float ay;
-	int y_initial;
+	float y_initial;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 
 public:

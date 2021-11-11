@@ -11,9 +11,9 @@ assets\coin.txt
 assets\questionbrick.txt
 assets\mushroom.txt
 assets\spawn.txt
-# sprite for koopa
-# brick bounces and breaks
-# collide between koopa and brick
+# sprite for mario
+# bricks breaks
+# up mushroom, leaf
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
@@ -89,32 +89,35 @@ assets\spawn.txt
 #BRICK
 1	130	120
 
-1	2080	179
-1	2096	179
-1	2112	179
-1	2128	179
-1	2144	179
-1	2160	179
-1	2176	179
-1	2096	163
-1	2112	163
-1	2128	163
-1	2144	163
-1	2160	163
-1	2112	147
-1	2128	147
-1	2144	147
-1	2160	147
+15	2080	179
+15	2096	179
+15	2112	179
+15	2128	179
+15	2144	179
+15	2160	179
+15	2176	179
+15	2096	163
+15	2112	163
+15	2128	163
+15	2144	163
+15	2160	163
+15	2112	147
+15	2128	147
+15	2144	147
+15	2160	147
 
-1	2224	179
-1	2240	179
-1	2224	163
+15	2224	179
+15	2240	179
+15	2224	163
 
 #Mushroom
 11	180	120
 
 #QuestionBrick
 10	180	120
+
+15	77	120
+15	111	120
 
 13	95	120
 10	95	120
@@ -149,4 +152,4 @@ assets\spawn.txt
 5	2384	195	30	15	20	60000	60000	60000
 
 # MARIO
-0	2300	10
+0	2270	10
