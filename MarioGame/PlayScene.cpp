@@ -136,7 +136,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_D1COIN: obj = new D1Coin(x, y); break;
 	case OBJECT_TYPE_MUSHROOM: obj = new Mushroom(x, y); break;
 
-	case OBJECT_TYPE_PIPE: obj = new CPipe(x, y); break;
+	case OBJECT_TYPE_PIPE: 
+	{
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int sprite_id = atoi(tokens[5].c_str());
+
+		obj = new CPipe(x, y, cell_width, cell_height, sprite_id); 
+		break;
+	}
+		
 
 	case OBJECT_TYPE_RECTANGLE:
 	{

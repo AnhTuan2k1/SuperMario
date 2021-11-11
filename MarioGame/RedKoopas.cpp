@@ -173,7 +173,7 @@ void RedKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CPlatform*>(e->obj))
 		OnCollisionWithPlatform(e);
 	if (dynamic_cast<CBrick*>(e->obj))
-		OnCollisionWithRectangle(e);
+		OnCollisionWithBrick(e);
 	if (dynamic_cast<CPipe*>(e->obj))
 		OnCollisionWithPipe(e);
 	if (e->ny != 0 && e->obj->IsBlocking())

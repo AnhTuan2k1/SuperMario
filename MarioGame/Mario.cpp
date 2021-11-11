@@ -49,25 +49,6 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (e->ny != 0 && e->obj->IsBlocking())
-	{
-		if (e->ny < 0 && e->obj->IsBlocking())
-		{
-			vy = 0;
-			isOnPlatform = true;
-			return;
-		}
-
-
-		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
-	}
-	else
-		if (e->nx != 0 && e->obj->IsBlocking())
-		{
-			vx = 0;
-		}
-
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<DCoin*>(e->obj))
@@ -87,6 +68,25 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	else if (dynamic_cast<Spawn*>(e->obj))
 		OnCollisionWithSpawn(e);
+
+	if (e->ny != 0 && e->obj->IsBlocking())
+	{
+		if (e->ny < 0 && e->obj->IsBlocking())
+		{
+			vy = 0;
+			isOnPlatform = true;
+			return;
+		}
+
+
+		vy = 0;
+		if (e->ny < 0) isOnPlatform = true;
+	}
+	else
+		if (e->nx != 0 && e->obj->IsBlocking())
+		{
+			vx = 0;
+		}
 
 	//else if (dynamic_cast<CPortal*>(e->obj))
 	//	OnCollisionWithPortal(e);
