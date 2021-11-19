@@ -11,8 +11,9 @@ assets\coin.txt
 assets\questionbrick.txt
 assets\mushroom.txt
 assets\spawn.txt
+assets\landscape.txt
 # sprite for mario
-# bricks breaks
+# fix redkoopas
 # up mushroom, leaf
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -45,7 +46,7 @@ assets\spawn.txt
 12	715	20	2	870	150	2	920	150	8	1000	150
 12	1170	20	3	1415	70	3	1455	70	3	1495	70	14	1510	70
 
-#PIPE
+#PIPE # LANSCAPE = 16
 7	330	163	31	47	80000
 
 7	1625	110	16	16	25000
@@ -57,7 +58,6 @@ assets\spawn.txt
 7	1724	163	16	16	25000
 7	1740	163	16	16	25000
 7	1740	147	16	16	25000
-
 
 7	1788	179	16	16	25000
 7	1788	163	16	16	25000
@@ -73,6 +73,12 @@ assets\spawn.txt
 7	2448	179	31	47	80000
 7	2376	147	16	16	25000
 7	2392	147	16	16	25000
+
+16	40	163	79	47	120001
+16	900	163	62	47	120002
+16	1000	123	96	127	120003
+16	850	100	47	22	120032
+16	100	70	31	22	120031
 
 #14	340	120
 #DCOIN
@@ -138,6 +144,7 @@ assets\spawn.txt
 
 #Koopa
 14	2224	133
+14	1900	133
 #Platform
 5	0	195	30	15	37	60000	60000	60000
 5	1090	195	30	15	1	60000	60000	60000
@@ -152,4 +159,4 @@ assets\spawn.txt
 5	2384	195	30	15	20	60000	60000	60000
 
 # MARIO
-0	2270	10
+0	20	10

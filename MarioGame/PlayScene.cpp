@@ -17,6 +17,7 @@
 #include "Mushroom.h"
 #include "Spawn.h"
 #include "RedKoopas.h"
+#include "LandScape.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -146,7 +147,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CPipe(x, y, cell_width, cell_height, sprite_id); 
 		break;
 	}
-		
+	case OBJECT_TYPE_LANDSCAPE:
+	{
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int sprite_id = atoi(tokens[5].c_str());
+
+		obj = new LandScape(x, y, cell_width, cell_height, sprite_id);
+		break;
+	}
 
 	case OBJECT_TYPE_RECTANGLE:
 	{
