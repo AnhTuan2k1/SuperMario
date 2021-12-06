@@ -387,6 +387,11 @@ void CPlayScene::AddObject(CGameObject* object)
 	objects.push_back(object);
 }
 
+CGameObject* CPlayScene::getObject(int index)
+{
+	return objects[index];
+}
+
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
 
 void CPlayScene::PurgeDeletedObjects()
