@@ -47,22 +47,22 @@ void RedKoopas::SetState(int state)
 		vx = 0;
 		vy = 0;
 		ay = 0;
-		DebugOut(L">>> RedKoopas 1 >>> \n");
+		//DebugOut(L">>> RedKoopas 1 >>> \n");
 		break;
 	case REDKOOPA_STATE_WALKING_LEFT:
 		vx = -KOOPA_WALKING_SPEED;
-		DebugOut(L">>> RedKoopas 2 >>> \n");
+		//DebugOut(L">>> RedKoopas 2 >>> \n");
 		break;
 	case REDKOOPA_STATE_WALKING_RIGHT:
-		DebugOut(L">>> RedKoopas 3 >>> \n");
+		//DebugOut(L">>> RedKoopas 3 >>> \n");
 		vx = KOOPA_WALKING_SPEED;
 		break;
 	case REDKOOPA_STATE_SHELL_RUNNING:
-		DebugOut(L">>> RedKoopas 4 >>> \n");
+		//DebugOut(L">>> RedKoopas 4 >>> \n");
 		vx = -KOOPA_RUNING_SPEED;
 		break;
 	case REDKOOPA_STATE_DIE_BYKOOPAS:
-		DebugOut(L">>> RedKoopas 5 >>> \n");
+		//DebugOut(L">>> RedKoopas 5 >>> \n");
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		vx = 0;
 		ax = 0;
@@ -123,7 +123,7 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (x < rectangleX)
 			{
 				SetState(REDKOOPA_STATE_WALKING_RIGHT);
-				DebugOut(L">>> RedKoopas 6 >>> \n");
+				//DebugOut(L">>> RedKoopas 6 >>> \n");
 			}
 		}
 		else
@@ -131,7 +131,7 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (x > rectangleWidth)
 			{
 				SetState(REDKOOPA_STATE_WALKING_LEFT);
-				DebugOut(L">>> RedKoopas 7 >>> \n");
+				//DebugOut(L">>> RedKoopas 7 >>> \n");
 			}
 		}
 	
