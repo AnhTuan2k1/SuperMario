@@ -45,6 +45,7 @@ void CMario::OnNoCollision(DWORD dt)
 		x = 0;
 		y -= vy * dt;
 	}
+
 }
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
@@ -65,11 +66,9 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithRedKoopas(e);
 	else if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
-	if (dynamic_cast<CBrick*>(e->obj))
-		OnCollisionWithBrick(e);
-
 	else if (dynamic_cast<Spawn*>(e->obj))
 		OnCollisionWithSpawn(e);
+
 
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
@@ -122,7 +121,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
-					level = MARIO_LEVEL_SMALL;
+					SetLevel(MARIO_LEVEL_SMALL);
 					StartUntouchable();
 				}
 				else
@@ -190,7 +189,7 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
-					level = MARIO_LEVEL_SMALL;
+					SetLevel(MARIO_LEVEL_SMALL);
 					StartUntouchable();
 					DebugOut(L">>> Mario 6 >>> \n");
 				}
@@ -350,7 +349,7 @@ void CMario::OnCollisionWithRedKoopas(LPCOLLISIONEVENT e)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
-					level = MARIO_LEVEL_SMALL;
+					SetLevel(MARIO_LEVEL_SMALL);
 					StartUntouchable();
 					DebugOut(L">>> Mario 6 >>> \n");
 				}
@@ -511,10 +510,21 @@ int CMario::GetAniIdRaccoon()
 		}
 		else
 		{
+
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT;
+			{
+				if (vy > 0)
+					aniId = ID_ANI_MARIO_RACCOON_FALL_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT;
+			}
 			else
-				aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
+			{
+				if (vy > 0)
+					aniId = ID_ANI_MARIO_RACCOON_FALL_LEFT;
+				else
+					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
+			}			
 		}
 	}
 	else
@@ -552,6 +562,8 @@ int CMario::GetAniIdRaccoon()
 
 	if (aniId == -1) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
 
+	//tail->SetAniId(aniId);
+	//tail->SetPosition(x, y);
 	return aniId;
 }
 
@@ -570,10 +582,17 @@ void CMario::Render()
 		aniId = GetAniIdRaccoon();
 
 	animations->Get(aniId)->Render(x, y);
-
 	//RenderBoundingBox();
 
 	DebugOutTitle(L"Coins: %d", coin);
+
+	for (int i = 0; i < CGame::GetInstance()->GetCurrentScene()->NumberObject(); i++)
+	{
+		if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
+		{
+			position = i;
+		}
+	}
 }
 
 void CMario::SetState(int state)
@@ -723,6 +742,25 @@ void CMario::SetLevel(int l)
 	{
 		y -= (MARIO_BIG_RACCOON_BBOX_HEIGHT - MARIO_BIG_BBOX_HEIGHT) / 2 + 1;
 	}
+
+	//// add tail
+	//if (l == MARIO_LEVEL_RACCOON)
+	//{
+	//	if (tail == NULL)
+	//	{
+	//		tail = new Tail(x, y);
+	//		CGame::GetInstance()->GetCurrentScene()->AddObjectAt(tail, position);
+	//	}
+	//	
+	//}
+	//else
+	//{
+	//	if (tail != NULL)
+	//	{
+	//		tail->Delete();
+	//		tail = NULL;
+	//	}	
+	//}
 
 	level = l;
 }

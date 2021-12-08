@@ -33,6 +33,9 @@ public:
 	virtual void Render();
 	virtual void Unload();
 	virtual void AddObject(CGameObject* object);
+	virtual void AddObjectAt(CGameObject* object, int position);
+	virtual CGameObject* getObject(int index);
+	virtual int NumberObject();
 
 	virtual LPGAMEOBJECT GetPlayer() { return player; }
 

@@ -387,6 +387,23 @@ void CPlayScene::AddObject(CGameObject* object)
 	objects.push_back(object);
 }
 
+void CPlayScene::AddObjectAt(CGameObject* object, int position)
+{
+	std::vector<LPGAMEOBJECT>::iterator it;
+
+	objects.insert(objects.begin() + position, object);
+}
+
+CGameObject* CPlayScene::getObject(int index)
+{
+	return objects[index];
+}
+
+int CPlayScene::NumberObject()
+{
+	return objects.size();
+}
+
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
 
 void CPlayScene::PurgeDeletedObjects()

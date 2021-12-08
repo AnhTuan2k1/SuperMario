@@ -5,6 +5,7 @@
 #include "Animations.h"
 
 #include "debug.h"
+#include "Tail.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -57,6 +58,11 @@
 #define ID_ANI_MARIO_BRACE_RIGHT 1000
 #define ID_ANI_MARIO_BRACE_LEFT 1001
 
+#define ID_ANI_MARIO_HOLD_RIGHT 1002
+#define ID_ANI_MARIO_HOLD_LEFT 1003
+#define ID_ANI_MARIO_HOLD_WALK_RIGHT 1004
+#define ID_ANI_MARIO_HOLD_WALK_LEFT 1005
+
 #define ID_ANI_MARIO_DIE 999
 
 //RACCOON MARIO
@@ -81,6 +87,25 @@
 #define ID_ANI_MARIO_RACCOON_BRACE_RIGHT 2300
 #define ID_ANI_MARIO_RACCOON_BRACE_LEFT 2301
 
+#define ID_ANI_MARIO_RACCOON_BRACE_RIGHT 2300
+#define ID_ANI_MARIO_RACCOON_BRACE_LEFT 2301
+
+#define ID_ANI_MARIO_RACCOON_FALL_RIGHT 3100
+#define ID_ANI_MARIO_RACCOON_FALL_LEFT 3101
+
+#define ID_ANI_MARIO_RACCOON_HOLD_RIGHT 3200
+#define ID_ANI_MARIO_RACCOON_HOLD_LEFT 3201
+#define ID_ANI_MARIO_RACCOON_HOLD_WALK_RIGHT 3300
+#define ID_ANI_MARIO_RACCOON_HOLD_WALK_LEFT 3301
+
+#define ID_ANI_MARIO_RACCOON_FLY_UP_RIGHT 3400
+#define ID_ANI_MARIO_RACCOON_FLY_UP_LEFT 3401
+#define ID_ANI_MARIO_RACCOON_FLY_DOWN_RIGHT 3402
+#define ID_ANI_MARIO_RACCOON_FLY_DOWN_LEFT 3403
+
+#define ID_ANI_MARIO_RACCOON_HIT_RIGHT 3500
+#define ID_ANI_MARIO_RACCOON_HIT_LEFT 3501
+
 // SMALL MARIO
 #define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
 #define ID_ANI_MARIO_SMALL_IDLE_LEFT 1102
@@ -99,6 +124,11 @@
 
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
+
+#define ID_ANI_MARIO_SMALL_HOLD_RIGHT 1602
+#define ID_ANI_MARIO_SMALL_HOLD_LEFT 1603
+#define ID_ANI_MARIO_SMALL_HOLD_WALK_RIGHT 1604
+#define ID_ANI_MARIO_SMALL_HOLD_WALK_LEFT 1605
 
 #pragma endregion
 
@@ -142,6 +172,8 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
+	//Tail* tail;
+	int position;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
@@ -165,11 +197,13 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
-		level = MARIO_LEVEL_RACCOON;
+		level = 3;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+		//tail = NULL;
+		position = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
