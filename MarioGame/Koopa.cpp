@@ -8,7 +8,7 @@
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == KOOPA_STATE_SHELL)
+	if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HITTED_BYTAIL)
 	{
 		left = x - KOOPA_BBOX_WIDTH_SHELL / 2;
 		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
@@ -41,8 +41,6 @@ void Koopa::SetState(int state)
 		hide_start = GetTickCount64();
 		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
-		vy = 0;
-		ay = 0;
 		break;
 	case KOOPA_STATE_WALKING:
 		vx = -KOOPA_WALKING_SPEED;
@@ -68,8 +66,6 @@ void Koopa::SetState(int state, int direct)
 		hide_start = GetTickCount64();
 		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
-		vy = 0;
-		ay = 0;
 		break;
 	case KOOPA_STATE_WALKING:
 		vx = -KOOPA_WALKING_SPEED;
@@ -78,6 +74,15 @@ void Koopa::SetState(int state, int direct)
 		vx = -KOOPA_RUNING_SPEED * direct;
 		this->ay = KOOPA_GRAVITY;
 		break;
+	case KOOPA_STATE_HITTED_BYTAIL:
+		vy = -KOOPA_JUMP_DEFLECT_SPEED;
+		vx = KOOPA_JUMP_DEFLECT_SPEEDX * direct;
+		ax = 0;
+		ay = KOOPA_GRAVITY;
+		hide_start = GetTickCount64();
+		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		break;
+
 	//case KOOPA_STATE_DIE_BYKOOPAS:
 	//	vy = -KOOPA_JUMP_DEFLECT_SPEED;
 	//	vx = 0;
@@ -91,13 +96,21 @@ void Koopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if ((state == KOOPA_STATE_SHELL) && (GetTickCount64() - hide_start > KOOPA_SHELL_TIMEOUT))
+	if ((state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HITTED_BYTAIL)
+		&& (GetTickCount64() - hide_start > KOOPA_SHELL_TIMEOUT))
 	{
 		this->ax = 0;
 		this->ay = KOOPA_GRAVITY;
 		hide_start = -1;
 		SetState(KOOPA_STATE_WALKING);
+		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		return;
+	}
+
+	if (state == KOOPA_STATE_HITTED_BYTAIL && (GetTickCount64() - hide_start > 400))
+	{
+		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		SetState(KOOPA_STATE_SHELL);		
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -107,7 +120,7 @@ void Koopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void Koopa::Render()
 {
 	int aniId = ID_ANI_KOOPA_WALKING;
-	if (state == KOOPA_STATE_SHELL)
+	if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HITTED_BYTAIL)
 	{
 		aniId = ID_ANI_KOOPA_SHELL;
 	}

@@ -240,6 +240,7 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartHit();
 	//void AddTail();
+	void IncreaseCoin() { coin++; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void GetBoundingBoxRaccoon(float& left, float& top, float& right, float& bottom);

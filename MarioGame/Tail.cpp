@@ -9,6 +9,7 @@
 #include "Mushroom.h"
 #include "RedKoopas.h"
 #include "Brick.h"
+#include "PlayScene.h"
 
 void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -82,6 +83,11 @@ void Tail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 
 void Tail::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
+	Koopa* koopas = dynamic_cast<Koopa*>(e->obj);
+	if (vx > 0)
+		koopas->SetState(KOOPA_STATE_HITTED_BYTAIL, 1);
+	else 
+		koopas->SetState(KOOPA_STATE_HITTED_BYTAIL, -1);
 }
 
 void Tail::OnCollisionWithCoin(LPCOLLISIONEVENT e)
@@ -90,22 +96,53 @@ void Tail::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 
 void Tail::OnCollisionWithDCoin(LPCOLLISIONEVENT e)
 {
+	DCoin* dCoin = dynamic_cast<DCoin*>(e->obj);
+	if (dCoin->GetState() == DCOIN_STATE_STATIC)
+	{
+		dCoin->SetState(DCOIN_STATE_BOUNCE);
+		((CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer())->IncreaseCoin();
+	}
 }
 
 void Tail::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 {
+	QuestionBrick* questionBrick = dynamic_cast<QuestionBrick*>(e->obj);
+	if (questionBrick->GetState() == QUESTION_BRICK_STATE_STATIC)
+	{
+		questionBrick->SetState(QUESTION_BRICK_STATE_BOUNCE);
+	}
+	this->Delete();
 }
 
 void Tail::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 {
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+	if (brick->Isbreak())
+	{
+		brick->SetState(BRICK_STATE_BREAK);	
+	}
+
+
+	if (brick->GetBounceTimes() == 0) return;
+	if (brick->GetState() == BRICK_STATE_STATIC)
+	{
+		brick->SetState(BRICK_STATE_BOUNCE);
+	}
+	this->Delete();
 }
 
 void Tail::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
+
 }
 
 void Tail::OnCollisionWithRedKoopas(LPCOLLISIONEVENT e)
 {
+	RedKoopas* koopas = dynamic_cast<RedKoopas*>(e->obj);
+	if (vx > 0)
+		koopas->SetState(REDKOOPA_STATE_HITTED_BYTAIL, 1);
+	else
+		koopas->SetState(REDKOOPA_STATE_HITTED_BYTAIL, -1);
 }
 
 void Tail::OnNoCollision(DWORD dt)
