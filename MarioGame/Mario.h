@@ -34,6 +34,14 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#define MARIO_STATE_HIT	700
+
+#define MARIO_STATE_HOLD_RIGHT	800
+#define MARIO_STATE_HOLD_LEFT	801
+
+#define MARIO_STATE_HOLD_WALKING_RIGHT	802
+#define MARIO_STATE_HOLD_WALKING_LEFT	803
+
 
 #pragma region ANIMATION_ID
 
@@ -146,10 +154,11 @@
 #define MARIO_BIG_SITTING_BBOX_WIDTH  14
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 16
 
-#define MARIO_BIG_RACCOON_BBOX_WIDTH  13
+#define MARIO_BIG_RACCOON_BBOX_WIDTH  21
 #define MARIO_BIG_RACCOON_BBOX_HEIGHT 27
 #define MARIO_BIG_RACCOON_SITTING_BBOX_WIDTH  14
 #define MARIO_BIG_RACCOON_SITTING_BBOX_HEIGHT 16
+#define MARIO_BIG_RACCOON_TAIL_BBOX_WIDTH  8
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 #define MARIO_RACCOON_SIT_HEIGHT_ADJUST ((MARIO_BIG_RACCOON_BBOX_HEIGHT-MARIO_BIG_RACCOON_SITTING_BBOX_HEIGHT)/2 + 1)
@@ -159,6 +168,7 @@
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_HIT_TIME 302
 
 class CMario : public CGameObject
 {
@@ -170,10 +180,13 @@ class CMario : public CGameObject
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
+	bool statehit;
+	ULONGLONG hit_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
+	//float nxspriteposition;
 	//Tail* tail;
-	int position;
+	//int position;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
@@ -200,10 +213,13 @@ public:
 		level = 3;
 		untouchable = 0;
 		untouchable_start = -1;
+		statehit = false;
+		hit_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+		//nxspriteposition = 1;
 		//tail = NULL;
-		position = 0;
+		//position = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -222,6 +238,9 @@ public:
 	void SetLevel(int l);
 	int GetLevel() { return level; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	void StartHit();
+	//void AddTail();
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	void GetBoundingBoxRaccoon(float& left, float& top, float& right, float& bottom);
 };

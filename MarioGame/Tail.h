@@ -2,15 +2,17 @@
 #include "GameObject.h"
 
 
-#define TAIL_BBOX_WIDTH 8
-#define TAIL_BBOX_HEIGHT 8
+#define TAIL_BBOX_WIDTH 15
+#define TAIL_BBOX_HEIGHT 2
 
 #define TAIL_HIT_BBOX_WIDTH 9
 #define TAIL_HIT_BBOX_HEIGHT 5
 
+#define TAIL_SPEED 0.08f
+
 #define TAIL_STATE_DECORATE 284
-#define TAIL_STATE_HIT 289
-#define TAIL_DIE_TIMEOUT 1200
+#define TAIL_STATE_RIGHT 289
+#define TAIL_DIE_TIMEOUT 300
 
 #define ID_ANI_TAIL_IDLE_RIGHT 2400
 #define ID_ANI_TAIL_IDLE_LEFT 2401
@@ -30,38 +32,58 @@
 #define ID_ANI_TAIL_SIT_RIGHT 2900
 #define ID_ANI_TAIL_SIT_LEFT 2901
 
-#define ID_ANI_TAIL_BRACE_RIGHT 3000
+#define ID_ANI_TAIL_INVISIBLE 3000
 #define ID_ANI_TAIL_BRACE_LEFT 3001
+
+#define SCOPE_TAIL_HIT 30
 
 class Tail : public CGameObject
 {
 protected:
 
 	ULONGLONG hit_start;
-	int aniID;
+	//int aniID;
+	float xMario;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
+	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
+	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
+	void OnCollisionWithDCoin(LPCOLLISIONEVENT e);
+	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
+	void OnCollisionWithRedKoopas(LPCOLLISIONEVENT e);
+
+
+	//GetBoundingBox Raccoon Mario. 
 	virtual int IsCollidable()
 	{
-		return (state == TAIL_STATE_HIT);
+		return true;
 	};
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);	
-
 public:
-	Tail(float x, float y) : CGameObject(x, y) 
-	{ 
-		SetState(TAIL_STATE_DECORATE); 
-		aniID = ID_ANI_TAIL_IDLE_RIGHT;
-	}
+	//void SetAniId(int marioRaccoonAniID);
+	//void SetPosition(float xMario, float yMario);
+	//virtual void SetState(int state);
+	//void SetSpeed(float VxMario, float VyMario);
+	//void SetXmario(const float xMario);
 
-	void SetAniId(int marioRaccoonAniID);
-	void SetPosition(float xMario, float yMario);
-	virtual void SetState(int state);
-	void RenderBoundingBox();
+	Tail(float x, float y) : CGameObject(x, y)
+	{
+		//SetState(TAIL_STATE_RIGHT);
+		////aniID = ID_ANI_TAIL_INVISIBLE;
+		////vx = TAIL_SPEED;
+		xMario = x;
+		x = xMario + 7;
+		vy = 0;
+		vx = TAIL_SPEED;
+		hit_start = GetTickCount64();
+	}
 };
 

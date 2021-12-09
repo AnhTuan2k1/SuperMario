@@ -79,6 +79,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	}
 
+	if (y > 1000) this->Delete();
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -99,6 +101,10 @@ void CGoomba::Render()
 	{
 		
 	}
+	else if (state == WINGGOOMBA_STATE_HITTED_BYTAIL)
+	{
+		aniId = ID_ANI_WINGGOOMBA_WALKING;
+	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
 	//RenderBoundingBox();
@@ -107,6 +113,7 @@ void CGoomba::Render()
 void CGoomba::SetState(int state)
 {
 	CGameObject::SetState(state);
+	DebugOut(L">>>goomba set state1>>> \n");
 	switch (state)
 	{		
 		case GOOMBA_STATE_DIE:
@@ -126,6 +133,23 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_WALKING: 
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
+
+	}
+}
+
+void CGoomba::SetState(int state, int direct)
+{
+	DebugOut(L">>>goomba set state2>>> \n");
+	CGameObject::SetState(state);
+	switch (state)
+	{
+	case WINGGOOMBA_STATE_HITTED_BYTAIL:
+	case GOOMBA_STATE_HITTED_BYTAIL:
+		vy = -GOOMBA_JUMP_DEFLECT_SPEED;
+		vx = GOOMBA_JUMP_DEFLECT_SPEEDX * direct;
+		ax = 0;
+
+		break;
 
 	}
 }

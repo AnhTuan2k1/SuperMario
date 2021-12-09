@@ -10,6 +10,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMario* mario = (CMario *)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer(); 
+	if (mario->GetState() == MARIO_STATE_HIT) return;
 
 	switch (KeyCode)
 	{
@@ -34,6 +35,11 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_R: // reset
 		//Reload();
 		break;
+	case DIK_A: 
+		if (mario->GetLevel() == 3 && mario->GetState() != MARIO_STATE_HIT)
+			mario->SetState(MARIO_STATE_HIT);
+		break;
+
 	}
 }
 
@@ -57,6 +63,7 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 {
 	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	
 
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
@@ -72,6 +79,7 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
+	else if (mario->GetState() == MARIO_STATE_HIT) return;
 	else
 		mario->SetState(MARIO_STATE_IDLE);
 }
