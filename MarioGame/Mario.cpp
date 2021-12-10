@@ -56,7 +56,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else vy = MARIO_SPEED_SLOWDOWN;
 	}
-	
+
 
 	isOnPlatform = false;
 
@@ -569,8 +569,8 @@ int CMario::GetAniIdRaccoon()
 		else if (isSlowdown)
 		{
 			if (GetTickCount64() - slowdown_start < MARIO_SHOWDOWN_TIME_SPRITE)
-			if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_RIGHT;
-			else aniId = ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_LEFT;
+				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_LEFT;
 		}
 
 		else if (abs(ax) == MARIO_ACCEL_RUN_X)
@@ -903,7 +903,7 @@ void CMario::StartHit()
 
 void CMario::StartSlowdown()
 {
-	if (isOnPlatform) return;
+	if (isOnPlatform || level != MARIO_LEVEL_RACCOON) return;
 
 	isSlowdown = true;
 	slowdown_start = GetTickCount64();
