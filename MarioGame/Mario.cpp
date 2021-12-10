@@ -16,6 +16,7 @@
 #include "Spawn.h"
 #include "RedKoopas.h"
 #include "Brick.h"
+#include "Leaf.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -79,6 +80,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBrick(e);
 	else if (dynamic_cast<Spawn*>(e->obj))
 		OnCollisionWithSpawn(e);
+	else if (dynamic_cast<Leaf*>(e->obj))
+		OnCollisionWithLeaf(e);
 
 
 	if (e->ny != 0 && e->obj->IsBlocking())
@@ -292,13 +295,18 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 
 	if (e->ny > 0) 
 	{
-		if (level != MARIO_LEVEL_SMALL)
+
+		if (mushroom->GetState() == MUSHROOM_STATE_HIDE)
 		{
-			mushroom->Delete();
-		}
-		else if (mushroom->GetState() == MUSHROOM_STATE_HIDE)
-		{
-			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+			if (level == MARIO_LEVEL_SMALL)
+				mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+			else
+			{
+				mushroom->Delete();
+				float xx, yy;
+				mushroom->GetPosition(xx,yy);
+				CGame::GetInstance()->GetCurrentScene()->AddObject(new Leaf(xx, yy));
+			}
 		}
 	}
 	
@@ -385,6 +393,18 @@ void CMario::OnCollisionWithRedKoopas(LPCOLLISIONEVENT e)
 			}
 		}
 	}
+}
+
+void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
+{
+	Leaf* leaf = dynamic_cast<Leaf*>(e->obj);
+
+	if (level < MARIO_LEVEL_RACCOON)
+	{
+		SetLevel(level + 1);
+	}
+
+	leaf->Delete();
 }
 
 //void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

@@ -10,6 +10,7 @@
 #include "RedKoopas.h"
 #include "Brick.h"
 #include "PlayScene.h"
+#include "Leaf.h"
 
 void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -133,7 +134,21 @@ void Tail::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 
 void Tail::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
+	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
 
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE)
+	{
+		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		else
+		{
+			mushroom->Delete();
+			float xx, yy;
+			mushroom->GetPosition(xx, yy);
+			CGame::GetInstance()->GetCurrentScene()->AddObject(new Leaf(xx, yy));
+		}
+	}
 }
 
 void Tail::OnCollisionWithRedKoopas(LPCOLLISIONEVENT e)

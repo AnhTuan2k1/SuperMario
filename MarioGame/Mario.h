@@ -198,6 +198,7 @@ class CMario : public CGameObject
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 	void OnCollisionWithSpawn(LPCOLLISIONEVENT e);
 	void OnCollisionWithRedKoopas(LPCOLLISIONEVENT e);
+	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	int GetAniIdBig();
 	int GetAniIdSmall();
 	int GetAniIdRaccoon();
@@ -210,7 +211,7 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
-		level = 3;
+		level = 1;
 		untouchable = 0;
 		untouchable_start = -1;
 		statehit = false;
