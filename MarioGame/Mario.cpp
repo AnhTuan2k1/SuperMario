@@ -31,6 +31,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
+	if(statehit)
 	if (GetTickCount64() - hit_start > MARIO_HIT_TIME && statehit)
 	{
 		hit_start = 0;
@@ -42,6 +43,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		DebugOut(L">>>end hit>>> \n");
 	}
+
+	if (isSlowdown)
+	{
+
+		if ((GetTickCount64() - slowdown_start > MARIO_SHOWDOWN_TIME) || isOnPlatform)
+		{
+			slowdown_start = 0;
+			isSlowdown = false;
+			//ay = MARIO_GRAVITY;
+			DebugOut(L">>>end slowdown>>> \n");
+		}
+		else vy = MARIO_SPEED_SLOWDOWN;
+	}
+	
 
 	isOnPlatform = false;
 
@@ -551,6 +566,12 @@ int CMario::GetAniIdRaccoon()
 			if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_HIT_RIGHT;
 			else aniId = ID_ANI_MARIO_RACCOON_HIT_LEFT;
 		}
+		else if (isSlowdown)
+		{
+			if (GetTickCount64() - slowdown_start < MARIO_SHOWDOWN_TIME_SPRITE)
+			if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_RIGHT;
+			else aniId = ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_LEFT;
+		}
 
 		else if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
@@ -878,6 +899,16 @@ void CMario::StartHit()
 	hit_start = GetTickCount64(); 
 	CGame::GetInstance()->GetCurrentScene()->AddObject(new Tail(x, y + 7));
 	DebugOut(L">>>start hit>>> \n");
+}
+
+void CMario::StartSlowdown()
+{
+	if (isOnPlatform) return;
+
+	isSlowdown = true;
+	slowdown_start = GetTickCount64();
+	//ay = MARIO_GRAVITY_SLOWDOWN;
+	DebugOut(L">>>start slowdown>>> \n");
 }
 
 //void CMario::AddTail()

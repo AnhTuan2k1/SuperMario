@@ -17,6 +17,8 @@
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
 #define MARIO_GRAVITY			0.002f
+#define MARIO_GRAVITY_SLOWDOWN	0.001f
+#define MARIO_SPEED_SLOWDOWN	0.05f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
@@ -114,6 +116,10 @@
 #define ID_ANI_MARIO_RACCOON_HIT_RIGHT 3500
 #define ID_ANI_MARIO_RACCOON_HIT_LEFT 3501
 
+#define ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_RIGHT 3502
+#define ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_LEFT 3503
+
+
 // SMALL MARIO
 #define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
 #define ID_ANI_MARIO_SMALL_IDLE_LEFT 1102
@@ -169,10 +175,14 @@
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_HIT_TIME 302
+#define MARIO_SHOWDOWN_TIME 700
+#define MARIO_SHOWDOWN_TIME_SPRITE 700
 
 class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
+	bool isSlowdown;
+	ULONGLONG slowdown_start;
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
@@ -207,6 +217,7 @@ public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
 		isSitting = false;
+		isSlowdown = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
@@ -214,6 +225,7 @@ public:
 		level = 1;
 		untouchable = 0;
 		untouchable_start = -1;
+		slowdown_start = -1;
 		statehit = false;
 		hit_start = -1;
 		isOnPlatform = false;
@@ -240,6 +252,7 @@ public:
 	int GetLevel() { return level; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartHit();
+	void StartSlowdown();
 	//void AddTail();
 	void IncreaseCoin() { coin++; }
 
