@@ -737,7 +737,7 @@ void CMario::Render()
 		{
 			if (aniId == ID_ANI_MARIO_RACCOON_IDLE_RIGHT || aniId == ID_ANI_MARIO_RACCOON_IDLE_LEFT)
 			{
-				EndFly();
+				ay = MARIO_GRAVITY;
 			}
 
 		}
@@ -848,6 +848,8 @@ void CMario::SetState(int state)
 		if (isFlying)
 		{
 			vy = -MARIO_FLY_SPEED_Y;
+			isFlying = true;
+			ay = MARIO_GRAVITY_FLY;
 			DebugOut(L">>>mario fly>>> \n");
 		}
 		else if(power == MARIO_POWER_MAX)
