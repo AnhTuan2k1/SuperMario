@@ -51,12 +51,34 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			slowdown_start = 0;
 			isSlowdown = false;
-			//ay = MARIO_GRAVITY;
+			ay = MARIO_GRAVITY;
 			DebugOut(L">>>end slowdown>>> \n");
 		}
 		else vy = MARIO_SPEED_SLOWDOWN;
 	}
 
+	if (isLoadingPower)
+	{
+		if (!isOnPlatform) EndLoadPower();
+
+		else if (GetTickCount64() - power_start > MARIO_POWER_TIME)
+		{
+			power_start = GetTickCount64();
+			if (power < MARIO_POWER_MAX) power++;
+
+			if (power == MARIO_POWER_MAX)
+				DebugOut(L">>>power max>>> \n");
+		}
+
+	}
+
+	if (isFlying)
+	{
+		if (GetTickCount64() - fly_start > MARIO_FLY_TIME)
+		{
+			EndFly();
+		}
+	}
 
 	isOnPlatform = false;
 
@@ -132,14 +154,18 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		if (goomba->GetState() == WINGGOOMBA_STATE_WALKING)
 		{
 			goomba->SetState(GOOMBA_STATE_WALKING);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
+
+			if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+			else vy = -MARIO_JUMP_DEFLECT_SPEED;
+			
 		}
 		else
 
 			if (goomba->GetState() == GOOMBA_STATE_WALKING)
 			{
 				goomba->SetState(GOOMBA_STATE_DIE);
-				vy = -MARIO_JUMP_DEFLECT_SPEED;
+				if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+				else vy = -MARIO_JUMP_DEFLECT_SPEED;
 			}
 	}
 	else // hit by Goomba
@@ -178,21 +204,24 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		if (koopa->GetState() == KOOPA_STATE_WALKING)
 		{
 			koopa->SetState(KOOPA_STATE_SHELL);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-			DebugOut(L">>> Mario 1 >>> \n");
+			if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+			else vy = -MARIO_JUMP_DEFLECT_SPEED;
+			//DebugOut(L">>> Mario 1 >>> \n");
 		}
 		else
 			if (koopa->GetState() == KOOPA_STATE_SHELL_RUNNING)
 			{
 				koopa->SetState(KOOPA_STATE_SHELL);
-				vy = -MARIO_JUMP_DEFLECT_SPEED;
-				DebugOut(L">>> Mario 2 >>> \n");
+				if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+				else vy = -MARIO_JUMP_DEFLECT_SPEED;
+				//DebugOut(L">>> Mario 2 >>> \n");
 			}
 			else
 				if (koopa->GetState() == KOOPA_STATE_SHELL)
 				{
-					vy = -MARIO_JUMP_DEFLECT_SPEED;
-					DebugOut(L">>> Mario 3 >>> \n");
+					if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+					else vy = -MARIO_JUMP_DEFLECT_SPEED;
+					//DebugOut(L">>> Mario 3 >>> \n");
 				}
 	}
 	else // hit by Goomba
@@ -202,7 +231,7 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			if (koopa->GetState() == KOOPA_STATE_SHELL)
 			{
 				koopa->SetState(KOOPA_STATE_SHELL_RUNNING, 1);
-				DebugOut(L">>> Mario 4 >>> \n");
+				//DebugOut(L">>> Mario 4 >>> \n");
 				return;
 			}
 		}
@@ -212,7 +241,7 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			if (koopa->GetState() == KOOPA_STATE_SHELL)
 			{
 				koopa->SetState(KOOPA_STATE_SHELL_RUNNING, -1);
-				DebugOut(L">>> Mario 5 >>> \n");
+				//DebugOut(L">>> Mario 5 >>> \n");
 				return;
 			}
 		}
@@ -346,20 +375,23 @@ void CMario::OnCollisionWithRedKoopas(LPCOLLISIONEVENT e)
 		if (redkoopa->GetState() == REDKOOPA_STATE_WALKING_LEFT || redkoopa->GetState() == REDKOOPA_STATE_WALKING_RIGHT)
 		{
 			redkoopa->SetState(REDKOOPA_STATE_SHELL);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+			else vy = -MARIO_JUMP_DEFLECT_SPEED;
 			DebugOut(L">>> Mario 1 >>> \n");
 		}
 		else
 			if (redkoopa->GetState() == REDKOOPA_STATE_SHELL_RUNNING)
 			{
 				redkoopa->SetState(REDKOOPA_STATE_SHELL);
-				vy = -MARIO_JUMP_DEFLECT_SPEED;
+				if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+				else vy = -MARIO_JUMP_DEFLECT_SPEED;
 				DebugOut(L">>> Mario 2 >>> \n");
 			}
 			else
 				if (redkoopa->GetState() == REDKOOPA_STATE_SHELL)
 				{
-					vy = -MARIO_JUMP_DEFLECT_SPEED;
+					if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+					else vy = -MARIO_JUMP_DEFLECT_SPEED;
 					DebugOut(L">>> Mario 3 >>> \n");
 				}
 	}
@@ -566,6 +598,20 @@ int CMario::GetAniIdRaccoon()
 			if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_HIT_RIGHT;
 			else aniId = ID_ANI_MARIO_RACCOON_HIT_LEFT;
 		}
+		else if (isFlying)
+		{
+			if (nx > 0)
+			{
+				if (vy < 0) aniId = ID_ANI_MARIO_RACCOON_FLY_UP_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_FLY_DOWN_RIGHT;
+
+			}
+			else
+			{
+				if (vy < 0) aniId = ID_ANI_MARIO_RACCOON_FLY_UP_LEFT;
+				else aniId = ID_ANI_MARIO_RACCOON_FLY_DOWN_LEFT;
+			}
+		}
 		else if (isSlowdown)
 		{
 			if (GetTickCount64() - slowdown_start < MARIO_SHOWDOWN_TIME_SPRITE)
@@ -685,13 +731,23 @@ void CMario::Render()
 	else if (level == MARIO_LEVEL_SMALL)
 		aniId = GetAniIdSmall();
 	else if (level == MARIO_LEVEL_RACCOON)
+	{
 		aniId = GetAniIdRaccoon();
+		if (isFlying)
+		{
+			if (aniId == ID_ANI_MARIO_RACCOON_IDLE_RIGHT || aniId == ID_ANI_MARIO_RACCOON_IDLE_LEFT)
+			{
+				EndFly();
+			}
+
+		}
+	}
+		
 
 	animations->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
 
 	DebugOutTitle(L"Coins: %d", coin);
-
 	//for (int i = 0; i < CGame::GetInstance()->GetCurrentScene()->NumberObject(); i++)
 	//{
 	//	if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
@@ -734,12 +790,13 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_JUMP:
 		if (isSitting) break;
-		if (isOnPlatform)
+		if (isOnPlatform && !isFlying)
 		{
 			if (abs(this->vx) == MARIO_RUNNING_SPEED)
 				vy = -MARIO_JUMP_RUN_SPEED_Y;
 			else
 				vy = -MARIO_JUMP_SPEED_Y;
+			DebugOut(L">>>jump>>> \n");
 		}
 		break;
 
@@ -785,6 +842,25 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_HIT:
 		StartHit();
+		break;
+
+	case MARIO_STATE_FLY:
+		if (isFlying)
+		{
+			vy = -MARIO_FLY_SPEED_Y;
+			DebugOut(L">>>mario fly>>> \n");
+		}
+		else if(power == MARIO_POWER_MAX)
+		{
+			vy -= MARIO_FLY_START_SPEED_Y;
+			fly_start = GetTickCount64();
+			isFlying = true;
+			ay = MARIO_GRAVITY_FLY;
+			EndLoadPower();
+
+			DebugOut(L">>>start fly>>> \n");
+		}
+		
 		break;
 	}
 
@@ -890,6 +966,11 @@ void CMario::SetLevel(int l)
 		y -= (MARIO_BIG_RACCOON_BBOX_HEIGHT - MARIO_BIG_BBOX_HEIGHT) / 2 + 1;
 	}
 
+	if (l < 3 && isFlying)
+	{
+		EndFly();
+	}
+
 	level = l;
 }
 
@@ -903,12 +984,41 @@ void CMario::StartHit()
 
 void CMario::StartSlowdown()
 {
-	if (isOnPlatform || level != MARIO_LEVEL_RACCOON) return;
+	if (isOnPlatform || level != MARIO_LEVEL_RACCOON || isFlying) return;
 
 	isSlowdown = true;
 	slowdown_start = GetTickCount64();
 	//ay = MARIO_GRAVITY_SLOWDOWN;
 	DebugOut(L">>>start slowdown>>> \n");
+}
+
+void CMario::StartLoadPower()
+{
+	if (isLoadingPower) return;
+
+	if (isOnPlatform && level == MARIO_LEVEL_RACCOON)
+	{
+		isLoadingPower = true;
+		power_start = GetTickCount64();
+		DebugOut(L">>>start power>>> \n");
+	}
+
+}
+
+void CMario::EndLoadPower()
+{
+	isLoadingPower = false;
+	power = 0;
+	power_start = -1;
+	DebugOut(L">>>end power>>> \n");
+}
+
+void CMario::EndFly()
+{
+	fly_start = -1;
+	isFlying = false;
+	DebugOut(L">>>end fly>>> \n");
+	ay = MARIO_GRAVITY;
 }
 
 //void CMario::AddTail()

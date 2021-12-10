@@ -16,9 +16,14 @@
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
+#define MARIO_FLY_START_SPEED_Y	0.4f
+#define MARIO_FLY_SPEED_Y		0.3f
+#define MARIO_FLY_JUMP_DEFLECT_SPEED_Y	0.2f
+
 #define MARIO_GRAVITY			0.002f
 #define MARIO_GRAVITY_SLOWDOWN	0.001f
 #define MARIO_SPEED_SLOWDOWN	0.05f
+#define MARIO_GRAVITY_FLY		0.0004f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
@@ -43,6 +48,8 @@
 
 #define MARIO_STATE_HOLD_WALKING_RIGHT	802
 #define MARIO_STATE_HOLD_WALKING_LEFT	803
+
+#define MARIO_STATE_FLY	900
 
 
 #pragma region ANIMATION_ID
@@ -177,18 +184,27 @@
 #define MARIO_HIT_TIME 302
 #define MARIO_SHOWDOWN_TIME 700
 #define MARIO_SHOWDOWN_TIME_SPRITE 700
+#define MARIO_POWER_TIME 200
+#define MARIO_FLY_TIME 5000
+
+#define MARIO_POWER_MAX 6
 
 class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
 	bool isSlowdown;
+	bool isLoadingPower;
+	bool isFlying;
 	ULONGLONG slowdown_start;
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
-	int level; 
-	int untouchable; 
+	int power;
+	int level;
+	int untouchable;
+	ULONGLONG power_start;
+	ULONGLONG fly_start;
 	ULONGLONG untouchable_start;
 	bool statehit;
 	ULONGLONG hit_start;
@@ -218,14 +234,19 @@ public:
 	{
 		isSitting = false;
 		isSlowdown = false;
+		isLoadingPower = false;
+		isFlying = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
+		power = 0;
 		level = 1;
 		untouchable = 0;
 		untouchable_start = -1;
 		slowdown_start = -1;
+		power_start = -1;
+		fly_start = -1;
 		statehit = false;
 		hit_start = -1;
 		isOnPlatform = false;
@@ -253,6 +274,9 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void StartHit();
 	void StartSlowdown();
+	void StartLoadPower();
+	void EndLoadPower();
+	void EndFly();
 	//void AddTail();
 	void IncreaseCoin() { coin++; }
 
