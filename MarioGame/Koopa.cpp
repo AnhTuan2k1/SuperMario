@@ -39,20 +39,25 @@ void Koopa::SetState(int state)
 	{
 	case KOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (state != KOOPA_STATE_SHELL_RUNNING)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_WALKING:
 		vx = -KOOPA_WALKING_SPEED;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_SHELL_RUNNING:
 		vx = -KOOPA_RUNING_SPEED;
+		isRunning = true;
 		break;
 	case KOOPA_STATE_DIE_BYKOOPAS:
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		vx = 0;
 		ax = 0;
 		ay = KOOPA_GRAVITY;
+		isRunning = false;
 		break;
 	}
 }
@@ -64,15 +69,19 @@ void Koopa::SetState(int state, int direct)
 	{
 	case KOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (state != KOOPA_STATE_SHELL_RUNNING)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_WALKING:
 		vx = -KOOPA_WALKING_SPEED;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_SHELL_RUNNING:
 		vx = -KOOPA_RUNING_SPEED * direct;
 		this->ay = KOOPA_GRAVITY;
+		isRunning = true;
 		break;
 	case KOOPA_STATE_HITTED_BYTAIL:
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
@@ -81,6 +90,7 @@ void Koopa::SetState(int state, int direct)
 		ay = KOOPA_GRAVITY;
 		hide_start = GetTickCount64();
 		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		isRunning = false;
 		break;
 
 	//case KOOPA_STATE_DIE_BYKOOPAS:

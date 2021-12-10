@@ -65,6 +65,7 @@ void Tail::Render()
 void Tail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	if (goomba->GetState() == GOOMBA_STATE_DIE) return;
 	if (vx > 0)
 	{
 		if(goomba->GetState() == GOOMBA_STATE_WALKING)

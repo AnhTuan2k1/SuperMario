@@ -34,6 +34,7 @@ class RedKoopas : public CGameObject
 protected:
 	float ax;
 	float ay;
+	bool isRunning;
 
 	ULONGLONG hide_start;
 
@@ -68,6 +69,7 @@ public:
 		hide_start = -1;
 		SetState(REDKOOPA_STATE_WALKING_LEFT);
 
+		isRunning = false;
 		rectangleX = 0;
 		rectangleWidth = 0;
 	}

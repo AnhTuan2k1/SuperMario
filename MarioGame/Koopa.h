@@ -33,7 +33,7 @@ class Koopa : public CGameObject
 {
 	float ax;
 	float ay;
-
+	bool isRunning;
 	ULONGLONG hide_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -59,6 +59,7 @@ public:
 		this->ay = KOOPA_GRAVITY;
 		hide_start = -1;
 		SetState(KOOPA_STATE_WALKING);
+		isRunning = false;
 	}
 	virtual void SetState(int state);
 	void SetState(int state, int direct);

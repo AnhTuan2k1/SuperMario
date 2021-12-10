@@ -9,6 +9,8 @@
 #include "Platform.h"
 #include "Brick.h"
 #include "Pipe.h"
+#include "PlayScene.h"
+#include "Leaf.h"
 
 void RedKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -41,25 +43,31 @@ void RedKoopas::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case REDKOOPA_STATE_SHELL:
+	case REDKOOPA_STATE_SHELL:		
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (!isRunning)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		//DebugOut(L">>> RedKoopas 1 >>> \n");
+		isRunning = false;
 		break;
 	case REDKOOPA_STATE_WALKING_LEFT:
+		isRunning = false;
 		vx = -KOOPA_WALKING_SPEED;
 		//DebugOut(L">>> RedKoopas 2 >>> \n");
 		break;
 	case REDKOOPA_STATE_WALKING_RIGHT:
+		isRunning = false;
 		//DebugOut(L">>> RedKoopas 3 >>> \n");
 		vx = KOOPA_WALKING_SPEED;
 		break;
 	case REDKOOPA_STATE_SHELL_RUNNING:
+		isRunning = true;
 		//DebugOut(L">>> RedKoopas 4 >>> \n");
 		vx = -KOOPA_RUNING_SPEED;
 		break;
 	case REDKOOPA_STATE_DIE_BYKOOPAS:
+		isRunning = false;
 		//DebugOut(L">>> RedKoopas 5 >>> \n");
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		vx = 0;
@@ -76,20 +84,26 @@ void RedKoopas::SetState(int state, int direct)
 	{
 	case REDKOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (!isRunning)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
+		isRunning = false;
 		break;
 	case REDKOOPA_STATE_WALKING_LEFT:
+		isRunning = false;
 		vx = -KOOPA_WALKING_SPEED;
 		break;
 	case REDKOOPA_STATE_WALKING_RIGHT:
+		isRunning = false;
 		vx = KOOPA_WALKING_SPEED;
 		break;
 	case REDKOOPA_STATE_SHELL_RUNNING:
+		isRunning = true;
 		vx = -KOOPA_RUNING_SPEED * direct;
 		this->ay = KOOPA_GRAVITY;
 		break;
 	case REDKOOPA_STATE_HITTED_BYTAIL:
+		isRunning = false;
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		vx = KOOPA_JUMP_DEFLECT_SPEEDX * direct;
 		ax = 0;
@@ -313,27 +327,22 @@ void RedKoopas::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 }
 
 void RedKoopas::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
-{
-	/*Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
+{	
+	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
 
-	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && nx != 0)
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE)
 	{
-		if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->GetPlayer()))
+		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		else
 		{
-			CMario* mario = dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->GetPlayer());
-			if (mario->GetLevel() == MARIO_LEVEL_SMALL)
-			{
-				mushroom->SetState(MUSHROOM_STATE_BOUNCE);
-			}
-			if (mario->GetLevel() == MARIO_LEVEL_BIG)
-			{
-				mushroom->Delete();
-			}
+			mushroom->Delete();
+			float xx, yy;
+			mushroom->GetPosition(xx, yy);
+			CGame::GetInstance()->GetCurrentScene()->AddObject(new Leaf(xx, yy));
 		}
-		
-
-		
-	}*/
+	}
 }
 
 
