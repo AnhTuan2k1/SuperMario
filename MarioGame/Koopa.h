@@ -34,6 +34,8 @@ class Koopa : public CGameObject
 	float ax;
 	float ay;
 	bool isRunning;
+	bool isDropping;
+	ULONGLONG dropped_start;
 	ULONGLONG hide_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -58,11 +60,17 @@ public:
 		this->ax = 0;
 		this->ay = KOOPA_GRAVITY;
 		hide_start = -1;
+		dropped_start = -1;
 		SetState(KOOPA_STATE_WALKING);
 		isRunning = false;
+		isDropping = false;
 	}
 	virtual void SetState(int state);
 	void SetState(int state, int direct);
+	void SetHideStart(ULONGLONG hidestart) { hide_start = hidestart; }
+	ULONGLONG GetTimeHideRemain() { return KOOPA_SHELL_TIMEOUT - (GetTickCount64() - hide_start); }
+	void SetIsDropping(bool dropping) { isDropping = dropping; }
+	void SetDroppedstart(ULONGLONG timestart) { dropped_start = timestart; }
 };
 
 //class RedKoopa : public Koopa

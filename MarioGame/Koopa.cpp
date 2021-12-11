@@ -39,7 +39,7 @@ void Koopa::SetState(int state)
 	{
 	case KOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		if (state != KOOPA_STATE_SHELL_RUNNING)
+		if (state != KOOPA_STATE_SHELL_RUNNING && state != KOOPA_STATE_SHELL)
 			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		isRunning = false;
@@ -60,16 +60,17 @@ void Koopa::SetState(int state)
 		isRunning = false;
 		break;
 	}
+
+	isDropping = false;
 }
 
 void Koopa::SetState(int state, int direct)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case KOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		if (state != KOOPA_STATE_SHELL_RUNNING)
+		if (state != KOOPA_STATE_SHELL_RUNNING && state != KOOPA_STATE_SHELL)
 			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		isRunning = false;
@@ -99,6 +100,9 @@ void Koopa::SetState(int state, int direct)
 	//	ax = 0;
 	//	break;
 	}
+
+	isDropping = false;
+	CGameObject::SetState(state);
 }
 
 void Koopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -121,6 +125,15 @@ void Koopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		SetState(KOOPA_STATE_SHELL);		
+	}
+
+	if (isDropping)
+	{
+		if (state == KOOPA_STATE_SHELL && (GetTickCount64() - dropped_start > 500))
+		{
+			vx = 0;
+			SetState(KOOPA_STATE_SHELL);
+		}
 	}
 
 	CGameObject::Update(dt, coObjects);

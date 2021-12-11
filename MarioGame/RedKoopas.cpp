@@ -40,12 +40,11 @@ void RedKoopas::GetBoundingBox(float& left, float& top, float& right, float& bot
 
 void RedKoopas::SetState(int state)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case REDKOOPA_STATE_SHELL:		
 		hide_start = GetTickCount64();
-		if (!isRunning)
+		if (!isRunning && state != REDKOOPA_STATE_SHELL)
 			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		//DebugOut(L">>> RedKoopas 1 >>> \n");
@@ -63,6 +62,7 @@ void RedKoopas::SetState(int state)
 		break;
 	case REDKOOPA_STATE_SHELL_RUNNING:
 		isRunning = true;
+
 		//DebugOut(L">>> RedKoopas 4 >>> \n");
 		vx = -KOOPA_RUNING_SPEED;
 		break;
@@ -75,16 +75,18 @@ void RedKoopas::SetState(int state)
 		ay = KOOPA_GRAVITY;
 		break;
 	}
+
+	isDropping = false;
+	CGameObject::SetState(state);
 }
 
 void RedKoopas::SetState(int state, int direct)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case REDKOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		if (!isRunning)
+		if (!isRunning && state != REDKOOPA_STATE_SHELL)
 			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		isRunning = false;
@@ -118,6 +120,9 @@ void RedKoopas::SetState(int state, int direct)
 		//	ax = 0;
 		//	break;
 	}
+
+	isDropping = false;
+	CGameObject::SetState(state);
 }
 
 void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -139,8 +144,9 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == REDKOOPA_STATE_HITTED_BYTAIL && (GetTickCount64() - hide_start > 400))
 	{
 		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
-		SetState(KOOPA_STATE_SHELL);
+		SetState(REDKOOPA_STATE_SHELL);
 	}
+
 
 	//reverse direct if reaching the rectangle's end. 
 	if(state == REDKOOPA_STATE_WALKING_RIGHT || state == REDKOOPA_STATE_WALKING_LEFT)
@@ -161,7 +167,14 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				//DebugOut(L">>> RedKoopas 7 >>> \n");
 			}
 		}
-	
+	if (isDropping)
+	{
+		if (state == REDKOOPA_STATE_SHELL && (GetTickCount64() - dropped_start > 500))
+		{
+			vx = 0;
+			SetState(REDKOOPA_STATE_SHELL);
+		}
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);

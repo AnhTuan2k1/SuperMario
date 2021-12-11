@@ -59,7 +59,7 @@ void Tail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void Tail::Render()
 {
 	CAnimations::GetInstance()->Get(ID_ANI_TAIL_INVISIBLE)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Tail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

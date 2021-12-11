@@ -42,6 +42,12 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 			mario->SetState(MARIO_STATE_HIT);
 		break;
 
+	case DIK_D:
+		if (mario->IsHoldingShell())
+			mario->DropShell();
+		else mario->GetShell();
+		break;
+
 	}
 }
 
@@ -84,7 +90,11 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
 		if (game->IsKeyDown(DIK_A))
+		{
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
+			mario->StartLoadPower();
+		}
+			
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}

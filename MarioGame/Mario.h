@@ -16,6 +16,9 @@
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
+#define MARIO_DROP_SHELL_SPEED_Y 0.2f
+#define MARIO_DROP_SHELL_SPEED_X 0.2f
+
 #define MARIO_FLY_START_SPEED_Y	0.4f
 #define MARIO_FLY_SPEED_Y		0.3f
 #define MARIO_FLY_JUMP_DEFLECT_SPEED_Y	0.2f
@@ -79,6 +82,8 @@
 #define ID_ANI_MARIO_HOLD_LEFT 1003
 #define ID_ANI_MARIO_HOLD_WALK_RIGHT 1004
 #define ID_ANI_MARIO_HOLD_WALK_LEFT 1005
+#define ID_ANI_MARIO_HOLD_RUNNING_RIGHT 1006
+#define ID_ANI_MARIO_HOLD_RUNNING_LEFT 1007
 
 #define ID_ANI_MARIO_DIE 999
 
@@ -114,6 +119,8 @@
 #define ID_ANI_MARIO_RACCOON_HOLD_LEFT 3201
 #define ID_ANI_MARIO_RACCOON_HOLD_WALK_RIGHT 3300
 #define ID_ANI_MARIO_RACCOON_HOLD_WALK_LEFT 3301
+#define ID_ANI_MARIO_RACCOON_HOLD_RUN_RIGHT 3302
+#define ID_ANI_MARIO_RACCOON_HOLD_RUN_LEFT 3303
 
 #define ID_ANI_MARIO_RACCOON_FLY_UP_RIGHT 3400
 #define ID_ANI_MARIO_RACCOON_FLY_UP_LEFT 3401
@@ -150,6 +157,8 @@
 #define ID_ANI_MARIO_SMALL_HOLD_LEFT 1603
 #define ID_ANI_MARIO_SMALL_HOLD_WALK_RIGHT 1604
 #define ID_ANI_MARIO_SMALL_HOLD_WALK_LEFT 1605
+#define ID_ANI_MARIO_SMALL_HOLD_RUNNING_RIGHT 1606
+#define ID_ANI_MARIO_SMALL_HOLD_RUNNING_LEFT 1607
 
 #pragma endregion
 
@@ -184,7 +193,7 @@
 #define MARIO_HIT_TIME 302
 #define MARIO_SHOWDOWN_TIME 700
 #define MARIO_SHOWDOWN_TIME_SPRITE 700
-#define MARIO_POWER_TIME 200
+#define MARIO_POWER_TIME 150
 #define MARIO_FLY_TIME 5000
 
 #define MARIO_POWER_MAX 6
@@ -195,7 +204,10 @@ class CMario : public CGameObject
 	bool isSlowdown;
 	bool isLoadingPower;
 	bool isFlying;
+	bool isHolding;
+	bool isHitting;
 	ULONGLONG slowdown_start;
+	ULONGLONG holdingTimeMax;
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
@@ -203,10 +215,10 @@ class CMario : public CGameObject
 	int power;
 	int level;
 	int untouchable;
+	ULONGLONG holding_start;
 	ULONGLONG power_start;
 	ULONGLONG fly_start;
 	ULONGLONG untouchable_start;
-	bool statehit;
 	ULONGLONG hit_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
@@ -235,7 +247,9 @@ public:
 		isSitting = false;
 		isSlowdown = false;
 		isLoadingPower = false;
+		isHolding = false;
 		isFlying = false;
+		isHitting = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
@@ -243,11 +257,12 @@ public:
 		power = 0;
 		level = 1;
 		untouchable = 0;
+		holdingTimeMax = 0;
+		holding_start = -1;
 		untouchable_start = -1;
 		slowdown_start = -1;
-		power_start = -1;
+		power_start = -1;	
 		fly_start = -1;
-		statehit = false;
 		hit_start = -1;
 		isOnPlatform = false;
 		coin = 0;
@@ -275,8 +290,13 @@ public:
 	void StartHit();
 	void StartSlowdown();
 	void StartLoadPower();
+	void StartHoldingShell();
+	void DropShell();
+	void EndHoldingShell();
 	void EndLoadPower();
 	void EndFly();
+	bool GetShell();
+	bool IsHoldingShell() { return isHolding; }
 	//void AddTail();
 	void IncreaseCoin() { coin++; }
 
