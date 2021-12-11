@@ -172,7 +172,6 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (state == REDKOOPA_STATE_SHELL && (GetTickCount64() - dropped_start > 500))
 		{
 			vx = 0;
-			SetState(REDKOOPA_STATE_SHELL);
 		}
 	}
 
