@@ -18,6 +18,7 @@
 #include "Spawn.h"
 #include "RedKoopas.h"
 #include "LandScape.h"
+#include "Pbutton.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -137,6 +138,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_DCOIN: obj = new DCoin(x, y); break;
 	case OBJECT_TYPE_D1COIN: obj = new D1Coin(x, y); break;
 	case OBJECT_TYPE_MUSHROOM: obj = new Mushroom(x, y); break;
+	case OBJECT_TYPE_PBUTTON: obj = new Pbutton(x, y); break;
 
 	case OBJECT_TYPE_PIPE: 
 	{

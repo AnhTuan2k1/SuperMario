@@ -57,6 +57,7 @@ protected:
 	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 	void OnCollisionWithRedKoopas(LPCOLLISIONEVENT e);
+	void OnCollisionWithPbutton(LPCOLLISIONEVENT e);
 
 
 	//GetBoundingBox Raccoon Mario. 

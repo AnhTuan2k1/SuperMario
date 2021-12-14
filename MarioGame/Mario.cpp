@@ -17,6 +17,7 @@
 #include "RedKoopas.h"
 #include "Brick.h"
 #include "Leaf.h"
+#include "Pbutton.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -127,6 +128,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithSpawn(e);
 	else if (dynamic_cast<Leaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<Pbutton*>(e->obj))
+		OnCollisionWithPbutton(e);
 
 
 	if (e->ny != 0 && e->obj->IsBlocking())
@@ -464,6 +467,26 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	}
 
 	leaf->Delete();
+}
+
+void CMario::OnCollisionWithPbutton(LPCOLLISIONEVENT e)
+{
+	Pbutton* pbutton = dynamic_cast<Pbutton*>(e->obj);
+
+	if (e->ny > 0)
+	{
+		if (pbutton->GetState() == PBUTTON_STATE_BRICK)
+		{
+			pbutton->SetState(PBUTTON_STATE_BOUNCED);
+		}
+	}
+	else if (e->ny < 0)
+	{
+		if (pbutton->GetState() == PBUTTON_STATE_BOUNCED)
+		{
+			pbutton->SetState(BRICK_STATE_ACTIVED);
+		}
+	}
 }
 
 //void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

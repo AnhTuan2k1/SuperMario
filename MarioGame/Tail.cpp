@@ -11,6 +11,7 @@
 #include "Brick.h"
 #include "PlayScene.h"
 #include "Leaf.h"
+#include "Pbutton.h"
 
 void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -161,6 +162,21 @@ void Tail::OnCollisionWithRedKoopas(LPCOLLISIONEVENT e)
 		koopas->SetState(REDKOOPA_STATE_HITTED_BYTAIL, -1);
 }
 
+void Tail::OnCollisionWithPbutton(LPCOLLISIONEVENT e)
+{
+	Pbutton* pbutton = dynamic_cast<Pbutton*>(e->obj);
+
+	if (pbutton->GetState() == PBUTTON_STATE_BRICK)
+	{
+		pbutton->SetState(PBUTTON_STATE_BOUNCED);
+		this->Delete();
+	}
+	else if (pbutton->GetState() == PBUTTON_STATE_BOUNCED)
+	{
+		pbutton->SetState(BRICK_STATE_ACTIVED);
+	}
+}
+
 void Tail::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
@@ -186,6 +202,8 @@ void Tail::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithRedKoopas(e);
 	else if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
+	else if (dynamic_cast<Pbutton*>(e->obj))
+		OnCollisionWithPbutton(e);
 
 }
 
