@@ -174,6 +174,7 @@ void Tail::OnCollisionWithPbutton(LPCOLLISIONEVENT e)
 	else if (pbutton->GetState() == PBUTTON_STATE_BOUNCED)
 	{
 		pbutton->SetState(BRICK_STATE_ACTIVED);
+		this->Delete();
 	}
 }
 

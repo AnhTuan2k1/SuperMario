@@ -15,5 +15,7 @@
 71001	460	101	507	148	30
 71002	492	5	539	148	30
 
+79001	162	262	225	293	30
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
