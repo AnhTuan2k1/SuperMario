@@ -5,7 +5,7 @@ void Spawn::Render()
 {
 	CSprites* s = CSprites::GetInstance();
 	s->Get(ID_SPRITE_SPAWN)->Draw(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Spawn::GetBoundingBox(float& left, float& top, float& right, float& bottom)

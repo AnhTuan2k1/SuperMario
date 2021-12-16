@@ -70,6 +70,12 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_A:
 		mario->EndLoadPower();
 		break;
+	case DIK_RIGHT:
+		if (mario->GetIsLoadingPower()) mario->EndLoadPower();
+		break;
+	case DIK_LEFT:
+		if (mario->GetIsLoadingPower()) mario->EndLoadPower();
+		break;
 	}
 }
 
@@ -93,7 +99,7 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
 		if (game->IsKeyDown(DIK_A))
-		{
+		{			
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 			mario->StartLoadPower();
 		}

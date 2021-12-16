@@ -150,6 +150,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (e->nx != 0 && e->obj->IsBlocking())
 		{
 			vx = 0;
+			if (isLoadingPower) EndLoadPower();
 		}
 
 }
@@ -887,7 +888,7 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
-
+	RenderPowerBar();
 	DebugOutTitle(L"Coins: %d", coin);
 	//for (int i = 0; i < CGame::GetInstance()->GetCurrentScene()->NumberObject(); i++)
 	//{
@@ -1326,6 +1327,55 @@ void CMario::ExitHiddenZone()
 	isInHiddenZone = false;
 	x = EXIT_HIDDEN_ZONE_X;
 	y = EXIT_HIDDEN_ZONE_Y;
+}
+
+void CMario::RenderPowerBar()
+{
+	CAnimations* animations = CAnimations::GetInstance();
+
+	float cx, cy;
+
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	CGame* game = CGame::GetInstance();
+	cy += game->GetBackBufferHeight() - 5;
+	cx += 20;
+
+
+	if (power == MARIO_POWER_MAX)
+	{
+		for (int i = 0; i < power; i++)
+		{
+			animations->Get(ID_ANI_POWER_BAR_MAX)->Render(cx + i * 13, cy);
+		}
+	}
+	else if (isFlying)
+	{
+		int timefly = (int)(MARIO_FLY_TIME - (GetTickCount64() - fly_start)) / 500; // hardcode
+		int i = 0;
+
+		for (; i < timefly; i++)
+		{
+			animations->Get(ID_ANI_SPRITE_POWER_BAR_FILLED)->Render(cx + i * 13, cy);
+		}
+
+		for (; i < MARIO_POWER_MAX; i++)
+		{
+			animations->Get(ID_ANI_SPRITE_POWER_BAR_EMPTY)->Render(cx + i * 13, cy);
+		}
+	}
+	else
+	{
+		for (int i = 0; i < MARIO_POWER_MAX; i++)
+		{
+			animations->Get(ID_ANI_SPRITE_POWER_BAR_EMPTY)->Render(cx + i * 13, cy);
+		}
+
+		for (int i = 0; i < power; i++)
+		{
+			animations->Get(ID_ANI_SPRITE_POWER_BAR_FILLED)->Render(cx + i * 13, cy);
+		}
+	}
 }
 
 //void CMario::AddTail()

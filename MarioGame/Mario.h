@@ -197,6 +197,9 @@
 #define MARIO_POWER_TIME 75
 #define MARIO_FLY_TIME 5000
 
+#define ID_ANI_SPRITE_POWER_BAR_EMPTY 120121
+#define ID_ANI_SPRITE_POWER_BAR_FILLED 120122
+#define ID_ANI_POWER_BAR_MAX 120120
 #define MARIO_POWER_MAX 10
 
 class CMario : public CGameObject
@@ -313,5 +316,6 @@ public:
 	void ExitHiddenZone();
 	void RenderPowerBar();
 	int GetPower() { return power; }
+	bool GetIsLoadingPower() { return isLoadingPower; }
 };
 
