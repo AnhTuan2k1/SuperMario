@@ -6,6 +6,7 @@
 
 #include "debug.h"
 #include "Tail.h"
+#include "PowerBar.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -193,10 +194,10 @@
 #define MARIO_HIT_TIME 302
 #define MARIO_SHOWDOWN_TIME 700
 #define MARIO_SHOWDOWN_TIME_SPRITE 700
-#define MARIO_POWER_TIME 150
+#define MARIO_POWER_TIME 75
 #define MARIO_FLY_TIME 5000
 
-#define MARIO_POWER_MAX 6
+#define MARIO_POWER_MAX 10
 
 class CMario : public CGameObject
 {
@@ -310,4 +311,7 @@ public:
 	static void SetPlayer(CMario*& mario);
 	void AccessHiddenZone();
 	void ExitHiddenZone();
+	void RenderPowerBar();
+	int GetPower() { return power; }
 };
+

@@ -21,3 +21,4 @@ height	240
 40	textures\enemies2.png
 50	textures\mariogreen.png
 60	textures\pbutton.png
+70	textures\powerbar.png

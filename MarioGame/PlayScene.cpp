@@ -139,6 +139,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_D1COIN: obj = new D1Coin(x, y); break;
 	case OBJECT_TYPE_MUSHROOM: obj = new Mushroom(x, y); break;
 	case OBJECT_TYPE_PBUTTON: obj = new Pbutton(x, y); break;
+	case OBJECT_TYPE_POWERBAR: obj = new PowerBar(x, y); break;
 
 	case OBJECT_TYPE_PIPE: 
 	{
