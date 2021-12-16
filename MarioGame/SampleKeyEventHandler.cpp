@@ -2,7 +2,7 @@
 
 #include "debug.h"
 #include "Game.h"
-
+#include "Portal.h"
 #include "Mario.h"
 #include "PlayScene.h"
 
@@ -16,6 +16,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT);
+		float x, y;
+		mario->GetPosition(x, y);
+		CPortal::AccessMoneyZone(x,y);
 		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_FLY);

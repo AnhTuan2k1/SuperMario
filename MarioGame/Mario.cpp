@@ -10,7 +10,7 @@
 #include "DCoin.h"
 #include "QuestionBrick.h"
 #include "Mushroom.h"
-//#include "Portal.h"
+#include "Portal.h"
 
 #include "Collision.h"
 #include "Spawn.h"
@@ -130,7 +130,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithLeaf(e);
 	else if (dynamic_cast<Pbutton*>(e->obj))
 		OnCollisionWithPbutton(e);
-
+	else if (dynamic_cast<CPortal*>(e->obj))
+		OnCollisionWithPortal(e);
 
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
@@ -151,8 +152,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 			vx = 0;
 		}
 
-	//else if (dynamic_cast<CPortal*>(e->obj))
-	//	OnCollisionWithPortal(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -489,11 +488,10 @@ void CMario::OnCollisionWithPbutton(LPCOLLISIONEVENT e)
 	}
 }
 
-//void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
-//{
-//	CPortal* p = (CPortal*)e->obj;
-//	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
-//}
+void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
+{
+	ExitHiddenZone();
+}
 
 //
 // Get animation ID for small Mario
@@ -1093,6 +1091,18 @@ void CMario::GetBoundingBoxRaccoon(float& left, float& top, float& right, float&
 
 }
 
+void CMario::SetPlayer(CMario*& mario)
+{
+	for (int i = 0; i < CGame::GetInstance()->GetCurrentScene()->NumberObject(); i++)
+	{
+		if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
+		{
+			mario = dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i));
+		}
+	}
+}
+
+
 void CMario::SetLevel(int l)
 {
 	// Adjust position to avoid falling off platform
@@ -1302,6 +1312,20 @@ bool CMario::GetShell()
 	}
 	
 	return false;
+}
+
+void CMario::AccessHiddenZone()
+{
+	isInHiddenZone = true;
+	x = HIDDEN_ZONE_X;
+	y = HIDDEN_ZONE_Y;
+}
+
+void CMario::ExitHiddenZone()
+{
+	isInHiddenZone = false;
+	x = EXIT_HIDDEN_ZONE_X;
+	y = EXIT_HIDDEN_ZONE_Y;
 }
 
 //void CMario::AddTail()

@@ -206,6 +206,7 @@ class CMario : public CGameObject
 	bool isFlying;
 	bool isHolding;
 	bool isHitting;
+	bool isInHiddenZone;
 	ULONGLONG slowdown_start;
 	ULONGLONG holdingTimeMax;
 	float maxVx;
@@ -252,6 +253,7 @@ public:
 		isHolding = false;
 		isFlying = false;
 		isHitting = false;
+		isInHiddenZone = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
@@ -299,9 +301,13 @@ public:
 	void EndFly();
 	bool GetShell();
 	bool IsHoldingShell() { return isHolding; }
+	bool IsInHiddenZone() { return isInHiddenZone; }
 	//void AddTail();
 	void IncreaseCoin() { coin++; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void GetBoundingBoxRaccoon(float& left, float& top, float& right, float& bottom);
+	static void SetPlayer(CMario*& mario);
+	void AccessHiddenZone();
+	void ExitHiddenZone();
 };

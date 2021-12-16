@@ -184,6 +184,7 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<RedKoopas*>(e->obj)) OnCollisionWithRedKoopa(e);
 	if (dynamic_cast<QuestionBrick*>(e->obj)) OnCollisionWithQuestionBrick(e);
 	if (dynamic_cast<Mushroom*>(e->obj)) OnCollisionWithMushroom(e);
+	if (dynamic_cast<CBrick*>(e->obj)) OnCollisionWithBrick(e);
 }
 
 void Koopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -238,6 +239,19 @@ void Koopa::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && nx != 0)
 	{
 		mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+	}
+}
+
+void Koopa::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+
+	if (e->nx != 0)
+	{
+		if (GetState() == REDKOOPA_STATE_SHELL_RUNNING && brick->Isbreak())
+		{
+			brick->SetState(BRICK_STATE_BREAK);
+		}
 	}
 }
 
