@@ -342,7 +342,8 @@ void RedKoopas::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {	
 	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
 
-	if (mushroom->GetState() == MUSHROOM_STATE_HIDE)
+	if(state = REDKOOPA_STATE_SHELL_RUNNING)
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && e->nx != 0)
 	{
 		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		if (mario->GetLevel() == MARIO_LEVEL_SMALL)

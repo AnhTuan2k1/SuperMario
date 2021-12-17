@@ -1282,7 +1282,7 @@ bool CMario::GetShell()
 			{
 				if (nx > 0)
 				{
-					if (xx - x > 5 && xx - x < MARIO_BIG_BBOX_WIDTH + 5)
+					if (xx - x > 5 && xx - x < MARIO_BIG_BBOX_WIDTH + 15)
 					{
 						holdingTimeMax = redKoopas->GetTimeHideRemain();
 						isHolding = true;
@@ -1296,7 +1296,7 @@ bool CMario::GetShell()
 				}
 				else
 				{
-					if (x - xx > 5 && x - xx < KOOPA_BBOX_WIDTH + 5)
+					if (x - xx > 5 && x - xx < KOOPA_BBOX_WIDTH + 10)
 					{
 						holdingTimeMax = redKoopas->GetTimeHideRemain();
 						isHolding = true;

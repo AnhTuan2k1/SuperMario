@@ -5,6 +5,8 @@
 #include "Brick.h"
 #include "QuestionBrick.h"
 #include "Mushroom.h"
+#include "Leaf.h"
+#include "PlayScene.h"
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -236,9 +238,19 @@ void Koopa::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
 
-	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && nx != 0)
+	if (state == KOOPA_STATE_SHELL_RUNNING)
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && e->nx != 0)
 	{
-		mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		else
+		{
+			mushroom->Delete();
+			float xx, yy;
+			mushroom->GetPosition(xx, yy);
+			CGame::GetInstance()->GetCurrentScene()->AddObject(new Leaf(xx, yy));
+		}
 	}
 }
 
