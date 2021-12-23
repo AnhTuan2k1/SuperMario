@@ -395,6 +395,7 @@ void CPlayScene::AddObject(CGameObject* object)
 	objects.push_back(object);
 }
 
+
 void CPlayScene::AddObjectAt(CGameObject* object, int position)
 {
 	std::vector<LPGAMEOBJECT>::iterator it;
@@ -411,6 +412,7 @@ int CPlayScene::NumberObject()
 {
 	return objects.size();
 }
+
 
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
 

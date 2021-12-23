@@ -29,6 +29,7 @@ public:
 	virtual void AddObjectAt(CGameObject* object, int position) = 0;
 	virtual CGameObject* getObject(int index) = 0;
 	virtual int NumberObject() = 0;
+
 };
 typedef CScene * LPSCENE;
 
