@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define SPAWN_HIGH 310
-#define SPAWN_WIDTH 5
+#define SPAWN_WIDTH 1
 #define SPAWN_STATE_INITIALIZED 235
 #define SPAWN_STATE_UNINITIALIZED 236
 #define ID_SPRITE_SPAWN 12345

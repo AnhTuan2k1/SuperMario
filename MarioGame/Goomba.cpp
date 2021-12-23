@@ -8,6 +8,8 @@ CGoomba::CGoomba(float x, float y, int state):CGameObject(x, y)
 	this->ay = GOOMBA_GRAVITY;
 	die_start = -1;
 	SetState(state);
+	isflying = false;
+	StartWalking();
 }
 
 CGoomba::CGoomba(float x, float y) :CGameObject(x, y)
@@ -86,6 +88,33 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	}
 
+	if (state == WINGGOOMBA_STATE_WALKING)
+	{
+		if (isflying)
+		{
+			vy = -WINGGOOMBA_FLY_SPEED;
+
+			if (GetTickCount64() - fly_start > WINGGOOMBA_FLY_TIMEOUT)
+			{
+				EndFlying();
+				StartWalking();
+			}
+
+			if (y < fly_y - WINGGOOMBA_FLY_HEIGHT)
+				y = fly_y - WINGGOOMBA_FLY_HEIGHT;
+		}
+		else if (isWalking)
+		{
+			if (GetTickCount64() - walk_start > WINGGOOMBA_WALK_TIMEOUT)
+			{
+				EndWalking();
+				StartFlying();
+			}
+		}
+	}
+
+	if (y > 1000) this->Delete();
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -100,11 +129,18 @@ void CGoomba::Render()
 	}
 	else if (state == WINGGOOMBA_STATE_WALKING)
 	{
-		aniId = ID_ANI_WINGGOOMBA_WALKING;
+		if (isflying)
+			aniId = ID_ANI_WINGGOOMBA_FLY;
+		else
+			aniId = ID_ANI_WINGGOOMBA_WALKING;
 	}
 	else if (state == GOOMBA_STATE_DIE_BYKOOPAS)
 	{
 		
+	}
+	else if (state == WINGGOOMBA_STATE_HITTED_BYTAIL)
+	{
+		aniId = ID_ANI_WINGGOOMBA_WALKING;
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
@@ -135,4 +171,45 @@ void CGoomba::SetState(int state)
 			break;
 
 	}
+}
+
+void CGoomba::SetState(int state, int direct)
+{
+	CGameObject::SetState(state);
+	switch (state)
+	{
+	case WINGGOOMBA_STATE_HITTED_BYTAIL:
+	case GOOMBA_STATE_HITTED_BYTAIL:
+		vy = -GOOMBA_JUMP_DEFLECT_SPEED;
+		vx = GOOMBA_JUMP_DEFLECT_SPEEDX * direct;
+		ax = 0;
+
+		break;
+
+	}
+}
+
+void CGoomba::StartFlying()
+{
+	isflying = true;
+	fly_start = GetTickCount64();
+}
+
+void CGoomba::StartWalking()
+{
+	isWalking = true;
+	walk_start = GetTickCount64();
+}
+
+void CGoomba::EndWalking()
+{
+	isWalking = false;
+	walk_start = -1;
+	fly_y = y;
+}
+
+void CGoomba::EndFlying()
+{
+	isflying = false;
+	fly_start = -1;
 }

@@ -6,6 +6,7 @@
 #define KOOPA_WALKING_SPEED 0.03f
 #define KOOPA_RUNING_SPEED 0.2f
 #define KOOPA_JUMP_DEFLECT_SPEED 0.3f
+#define KOOPA_JUMP_DEFLECT_SPEEDX 0.15f
 
 #define KOOPA_SHELL_TIMEOUT 7000
 
@@ -22,6 +23,7 @@
 //#define KOOPA_STATE_HIDE 330
 #define REDKOOPA_STATE_SHELL_RUNNING 440
 #define REDKOOPA_STATE_DIE_BYKOOPAS 550
+#define REDKOOPA_STATE_HITTED_BYTAIL 535
 
 #define ID_ANI_REDKOOPA_WALKING_LEFT 6002
 #define ID_ANI_REDKOOPA_WALKING_RIGHT 6003
@@ -32,8 +34,10 @@ class RedKoopas : public CGameObject
 protected:
 	float ax;
 	float ay;
-
+	bool isRunning;
+	bool isDropping;
 	ULONGLONG hide_start;
+	ULONGLONG dropped_start;
 
 	float rectangleX;
 	float rectangleWidth;
@@ -64,13 +68,20 @@ public:
 		this->ax = 0;
 		this->ay = KOOPA_GRAVITY;
 		hide_start = -1;
+		dropped_start = -1;
 		SetState(REDKOOPA_STATE_WALKING_LEFT);
 
+		isRunning = false;
+		isDropping = false;
 		rectangleX = 0;
 		rectangleWidth = 0;
 	}
 	virtual void SetState(int state);
 	void SetState(int state, int direct);
+	void SetHideStart(ULONGLONG hidestart) { hide_start = hidestart; }
+	void SetIsDropping(bool dropping) { isDropping = dropping; }
+	void SetDroppedstart(ULONGLONG timestart) { dropped_start = timestart; }
+	ULONGLONG GetTimeHideRemain() { return KOOPA_SHELL_TIMEOUT - (GetTickCount64() - hide_start); }
 };
 
 

@@ -5,10 +5,12 @@
 #include "Brick.h"
 #include "QuestionBrick.h"
 #include "Mushroom.h"
+#include "Leaf.h"
+#include "PlayScene.h"
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == KOOPA_STATE_SHELL)
+	if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HITTED_BYTAIL)
 	{
 		left = x - KOOPA_BBOX_WIDTH_SHELL / 2;
 		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
@@ -39,51 +41,70 @@ void Koopa::SetState(int state)
 	{
 	case KOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (state != KOOPA_STATE_SHELL_RUNNING && state != KOOPA_STATE_SHELL)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
-		vy = 0;
-		ay = 0;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_WALKING:
 		vx = -KOOPA_WALKING_SPEED;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_SHELL_RUNNING:
 		vx = -KOOPA_RUNING_SPEED;
+		isRunning = true;
 		break;
 	case KOOPA_STATE_DIE_BYKOOPAS:
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		vx = 0;
 		ax = 0;
 		ay = KOOPA_GRAVITY;
+		isRunning = false;
 		break;
 	}
+
+	isDropping = false;
 }
 
 void Koopa::SetState(int state, int direct)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case KOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (state != KOOPA_STATE_SHELL_RUNNING && state != KOOPA_STATE_SHELL)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
-		vy = 0;
-		ay = 0;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_WALKING:
 		vx = -KOOPA_WALKING_SPEED;
+		isRunning = false;
 		break;
 	case KOOPA_STATE_SHELL_RUNNING:
 		vx = -KOOPA_RUNING_SPEED * direct;
 		this->ay = KOOPA_GRAVITY;
+		isRunning = true;
 		break;
+	case KOOPA_STATE_HITTED_BYTAIL:
+		vy = -KOOPA_JUMP_DEFLECT_SPEED;
+		vx = KOOPA_JUMP_DEFLECT_SPEEDX * direct;
+		ax = 0;
+		ay = KOOPA_GRAVITY;
+		hide_start = GetTickCount64();
+		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		isRunning = false;
+		break;
+
 	//case KOOPA_STATE_DIE_BYKOOPAS:
 	//	vy = -KOOPA_JUMP_DEFLECT_SPEED;
 	//	vx = 0;
 	//	ax = 0;
 	//	break;
 	}
+
+	isDropping = false;
+	CGameObject::SetState(state);
 }
 
 void Koopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -91,13 +112,29 @@ void Koopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if ((state == KOOPA_STATE_SHELL) && (GetTickCount64() - hide_start > KOOPA_SHELL_TIMEOUT))
+	if ((state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HITTED_BYTAIL)
+		&& (GetTickCount64() - hide_start > KOOPA_SHELL_TIMEOUT))
 	{
 		this->ax = 0;
 		this->ay = KOOPA_GRAVITY;
 		hide_start = -1;
 		SetState(KOOPA_STATE_WALKING);
+		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		return;
+	}
+
+	if (state == KOOPA_STATE_HITTED_BYTAIL && (GetTickCount64() - hide_start > 400))
+	{
+		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		SetState(KOOPA_STATE_SHELL);		
+	}
+
+	if (isDropping)
+	{
+		if (state == KOOPA_STATE_SHELL && (GetTickCount64() - dropped_start > 500))
+		{
+			vx = 0;
+		}
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -107,7 +144,7 @@ void Koopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void Koopa::Render()
 {
 	int aniId = ID_ANI_KOOPA_WALKING;
-	if (state == KOOPA_STATE_SHELL)
+	if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HITTED_BYTAIL)
 	{
 		aniId = ID_ANI_KOOPA_SHELL;
 	}
@@ -149,6 +186,7 @@ void Koopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<RedKoopas*>(e->obj)) OnCollisionWithRedKoopa(e);
 	if (dynamic_cast<QuestionBrick*>(e->obj)) OnCollisionWithQuestionBrick(e);
 	if (dynamic_cast<Mushroom*>(e->obj)) OnCollisionWithMushroom(e);
+	if (dynamic_cast<CBrick*>(e->obj)) OnCollisionWithBrick(e);
 }
 
 void Koopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -200,9 +238,32 @@ void Koopa::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
 
-	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && nx != 0)
+	if (state == KOOPA_STATE_SHELL_RUNNING)
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && e->nx != 0)
 	{
-		mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		else
+		{
+			mushroom->Delete();
+			float xx, yy;
+			mushroom->GetPosition(xx, yy);
+			CGame::GetInstance()->GetCurrentScene()->AddObject(new Leaf(xx, yy));
+		}
+	}
+}
+
+void Koopa::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+
+	if (e->nx != 0)
+	{
+		if (GetState() == REDKOOPA_STATE_SHELL_RUNNING && brick->Isbreak())
+		{
+			brick->SetState(BRICK_STATE_BREAK);
+		}
 	}
 }
 

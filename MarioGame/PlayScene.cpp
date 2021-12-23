@@ -6,7 +6,7 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
-//#include "Portal.h"
+#include "Portal.h"
 #include "Coin.h"
 #include "Platform.h"
 #include "Rectangle.h"
@@ -18,6 +18,7 @@
 #include "Spawn.h"
 #include "RedKoopas.h"
 #include "LandScape.h"
+#include "Pbutton.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -137,6 +138,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_DCOIN: obj = new DCoin(x, y); break;
 	case OBJECT_TYPE_D1COIN: obj = new D1Coin(x, y); break;
 	case OBJECT_TYPE_MUSHROOM: obj = new Mushroom(x, y); break;
+	case OBJECT_TYPE_PBUTTON: obj = new Pbutton(x, y); break;
+	//case OBJECT_TYPE_POWERBAR: obj = new PowerBar(x, y); break;
 
 	case OBJECT_TYPE_PIPE: 
 	{
@@ -214,14 +217,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
-	//case OBJECT_TYPE_PORTAL:
-	//{
-	//	float r = (float)atof(tokens[3].c_str());
-	//	float b = (float)atof(tokens[4].c_str());
-	//	int scene_id = atoi(tokens[5].c_str());
-	//	obj = new CPortal(x, y, r, b, scene_id);
-	//}
-	//break;
+	case OBJECT_TYPE_PORTAL:
+	{
+		float r = (float)atof(tokens[3].c_str());
+		float b = (float)atof(tokens[4].c_str());
+		int scene_id = atoi(tokens[5].c_str());
+		obj = new CPortal(x, y, r, b, scene_id);
+	}
+	break;
 
 
 	default:
@@ -330,18 +333,23 @@ void CPlayScene::Update(DWORD dt)
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
-
 	// Update camera to follow mario
 	float cx, cy;
+	float xx, yy;
 	player->GetPosition(cx, cy);
-
+	player->GetPosition(xx, yy);
 	CGame* game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
 
 	if (cx < 0) cx = 0;
+	if (cy < -250) cy = -250;
+	if (cy > 0) cy = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f/*cy*/);
+
+	if (dynamic_cast<CMario*>(player)->IsInHiddenZone())
+		CGame::GetInstance()->SetCamPos(HIDDEN_ZONE_X - 30, HIDDEN_ZONE_Y + 15);
+	else CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();
 }
@@ -387,10 +395,24 @@ void CPlayScene::AddObject(CGameObject* object)
 	objects.push_back(object);
 }
 
+
+void CPlayScene::AddObjectAt(CGameObject* object, int position)
+{
+	std::vector<LPGAMEOBJECT>::iterator it;
+
+	objects.insert(objects.begin() + position, object);
+}
+
 CGameObject* CPlayScene::getObject(int index)
 {
 	return objects[index];
 }
+
+int CPlayScene::NumberObject()
+{
+	return objects.size();
+}
+
 
 bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; }
 

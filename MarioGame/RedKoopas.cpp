@@ -9,10 +9,12 @@
 #include "Platform.h"
 #include "Brick.h"
 #include "Pipe.h"
+#include "PlayScene.h"
+#include "Leaf.h"
 
 void RedKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == REDKOOPA_STATE_SHELL)
+	if (state == REDKOOPA_STATE_SHELL || state == REDKOOPA_STATE_HITTED_BYTAIL)
 	{
 		left = x - KOOPA_BBOX_WIDTH_SHELL / 2;
 		top = y - KOOPA_BBOX_HEIGHT_SHELL / 2;
@@ -38,30 +40,34 @@ void RedKoopas::GetBoundingBox(float& left, float& top, float& right, float& bot
 
 void RedKoopas::SetState(int state)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
-	case REDKOOPA_STATE_SHELL:
+	case REDKOOPA_STATE_SHELL:		
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (!isRunning && state != REDKOOPA_STATE_SHELL)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
-		vy = 0;
-		ay = 0;
 		//DebugOut(L">>> RedKoopas 1 >>> \n");
+		isRunning = false;
 		break;
 	case REDKOOPA_STATE_WALKING_LEFT:
+		isRunning = false;
 		vx = -KOOPA_WALKING_SPEED;
 		//DebugOut(L">>> RedKoopas 2 >>> \n");
 		break;
 	case REDKOOPA_STATE_WALKING_RIGHT:
+		isRunning = false;
 		//DebugOut(L">>> RedKoopas 3 >>> \n");
 		vx = KOOPA_WALKING_SPEED;
 		break;
 	case REDKOOPA_STATE_SHELL_RUNNING:
+		isRunning = true;
+
 		//DebugOut(L">>> RedKoopas 4 >>> \n");
 		vx = -KOOPA_RUNING_SPEED;
 		break;
 	case REDKOOPA_STATE_DIE_BYKOOPAS:
+		isRunning = false;
 		//DebugOut(L">>> RedKoopas 5 >>> \n");
 		vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		vx = 0;
@@ -69,36 +75,54 @@ void RedKoopas::SetState(int state)
 		ay = KOOPA_GRAVITY;
 		break;
 	}
+
+	isDropping = false;
+	CGameObject::SetState(state);
 }
 
 void RedKoopas::SetState(int state, int direct)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case REDKOOPA_STATE_SHELL:
 		hide_start = GetTickCount64();
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		if (!isRunning && state != REDKOOPA_STATE_SHELL)
+			y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
-		vy = 0;
-		ay = 0;
+		isRunning = false;
 		break;
 	case REDKOOPA_STATE_WALKING_LEFT:
+		isRunning = false;
 		vx = -KOOPA_WALKING_SPEED;
 		break;
 	case REDKOOPA_STATE_WALKING_RIGHT:
+		isRunning = false;
 		vx = KOOPA_WALKING_SPEED;
 		break;
 	case REDKOOPA_STATE_SHELL_RUNNING:
+		isRunning = true;
 		vx = -KOOPA_RUNING_SPEED * direct;
 		this->ay = KOOPA_GRAVITY;
 		break;
+	case REDKOOPA_STATE_HITTED_BYTAIL:
+		isRunning = false;
+		vy = -KOOPA_JUMP_DEFLECT_SPEED;
+		vx = KOOPA_JUMP_DEFLECT_SPEEDX * direct;
+		ax = 0;
+		ay = KOOPA_GRAVITY;
+		hide_start = GetTickCount64();
+		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		break;
+
 		//case KOOPA_STATE_DIE_BYKOOPAS:
 		//	vy = -KOOPA_JUMP_DEFLECT_SPEED;
 		//	vx = 0;
 		//	ax = 0;
 		//	break;
 	}
+
+	isDropping = false;
+	CGameObject::SetState(state);
 }
 
 void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -106,14 +130,23 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if ((state == REDKOOPA_STATE_SHELL) && (GetTickCount64() - hide_start > KOOPA_SHELL_TIMEOUT))
+	if ((state == REDKOOPA_STATE_SHELL || state == REDKOOPA_STATE_HITTED_BYTAIL)
+		&& (GetTickCount64() - hide_start > KOOPA_SHELL_TIMEOUT)) 
 	{
 		this->ax = 0;
 		this->ay = KOOPA_GRAVITY;
 		hide_start = -1;
+		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		SetState(REDKOOPA_STATE_WALKING_LEFT);
 		return;
 	}
+
+	if (state == REDKOOPA_STATE_HITTED_BYTAIL && (GetTickCount64() - hide_start > 400))
+	{
+		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
+		SetState(REDKOOPA_STATE_SHELL);
+	}
+
 
 	//reverse direct if reaching the rectangle's end. 
 	if(state == REDKOOPA_STATE_WALKING_RIGHT || state == REDKOOPA_STATE_WALKING_LEFT)
@@ -134,7 +167,13 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				//DebugOut(L">>> RedKoopas 7 >>> \n");
 			}
 		}
-	
+	if (isDropping)
+	{
+		if (state == REDKOOPA_STATE_SHELL && (GetTickCount64() - dropped_start > 500))
+		{
+			vx = 0;
+		}
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -143,7 +182,7 @@ void RedKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void RedKoopas::Render()
 {
 	int aniId = ID_ANI_REDKOOPA_WALKING_LEFT;
-	if (state == REDKOOPA_STATE_SHELL)
+	if (state == REDKOOPA_STATE_SHELL || state == REDKOOPA_STATE_HITTED_BYTAIL)
 	{
 		aniId = ID_ANI_REDKOOPA_SHELL;
 	}
@@ -300,27 +339,23 @@ void RedKoopas::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 }
 
 void RedKoopas::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
-{
-	/*Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
+{	
+	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
 
-	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && nx != 0)
+	if(state = REDKOOPA_STATE_SHELL_RUNNING)
+	if (mushroom->GetState() == MUSHROOM_STATE_HIDE && e->nx != 0)
 	{
-		if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->GetPlayer()))
+		CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+			mushroom->SetState(MUSHROOM_STATE_BOUNCE);
+		else
 		{
-			CMario* mario = dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->GetPlayer());
-			if (mario->GetLevel() == MARIO_LEVEL_SMALL)
-			{
-				mushroom->SetState(MUSHROOM_STATE_BOUNCE);
-			}
-			if (mario->GetLevel() == MARIO_LEVEL_BIG)
-			{
-				mushroom->Delete();
-			}
+			mushroom->Delete();
+			float xx, yy;
+			mushroom->GetPosition(xx, yy);
+			CGame::GetInstance()->GetCurrentScene()->AddObject(new Leaf(xx, yy));
 		}
-		
-
-		
-	}*/
+	}
 }
 
 

@@ -5,6 +5,8 @@
 #include "Animations.h"
 
 #include "debug.h"
+#include "Tail.h"
+#include "PowerBar.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -15,7 +17,17 @@
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
 
+#define MARIO_DROP_SHELL_SPEED_Y 0.3f
+#define MARIO_DROP_SHELL_SPEED_X 0.2f
+
+#define MARIO_FLY_START_SPEED_Y	0.4f
+#define MARIO_FLY_SPEED_Y		0.3f
+#define MARIO_FLY_JUMP_DEFLECT_SPEED_Y	0.2f
+
 #define MARIO_GRAVITY			0.002f
+#define MARIO_GRAVITY_SLOWDOWN	0.001f
+#define MARIO_SPEED_SLOWDOWN	0.05f
+#define MARIO_GRAVITY_FLY		0.0004f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
@@ -32,6 +44,16 @@
 
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
+
+#define MARIO_STATE_HIT	700
+
+#define MARIO_STATE_HOLD_RIGHT	800
+#define MARIO_STATE_HOLD_LEFT	801
+
+#define MARIO_STATE_HOLD_WALKING_RIGHT	802
+#define MARIO_STATE_HOLD_WALKING_LEFT	803
+
+#define MARIO_STATE_FLY	900
 
 
 #pragma region ANIMATION_ID
@@ -57,6 +79,13 @@
 #define ID_ANI_MARIO_BRACE_RIGHT 1000
 #define ID_ANI_MARIO_BRACE_LEFT 1001
 
+#define ID_ANI_MARIO_HOLD_RIGHT 1002
+#define ID_ANI_MARIO_HOLD_LEFT 1003
+#define ID_ANI_MARIO_HOLD_WALK_RIGHT 1004
+#define ID_ANI_MARIO_HOLD_WALK_LEFT 1005
+#define ID_ANI_MARIO_HOLD_RUNNING_RIGHT 1006
+#define ID_ANI_MARIO_HOLD_RUNNING_LEFT 1007
+
 #define ID_ANI_MARIO_DIE 999
 
 //RACCOON MARIO
@@ -81,6 +110,31 @@
 #define ID_ANI_MARIO_RACCOON_BRACE_RIGHT 2300
 #define ID_ANI_MARIO_RACCOON_BRACE_LEFT 2301
 
+#define ID_ANI_MARIO_RACCOON_BRACE_RIGHT 2300
+#define ID_ANI_MARIO_RACCOON_BRACE_LEFT 2301
+
+#define ID_ANI_MARIO_RACCOON_FALL_RIGHT 3100
+#define ID_ANI_MARIO_RACCOON_FALL_LEFT 3101
+
+#define ID_ANI_MARIO_RACCOON_HOLD_RIGHT 3200
+#define ID_ANI_MARIO_RACCOON_HOLD_LEFT 3201
+#define ID_ANI_MARIO_RACCOON_HOLD_WALK_RIGHT 3300
+#define ID_ANI_MARIO_RACCOON_HOLD_WALK_LEFT 3301
+#define ID_ANI_MARIO_RACCOON_HOLD_RUN_RIGHT 3302
+#define ID_ANI_MARIO_RACCOON_HOLD_RUN_LEFT 3303
+
+#define ID_ANI_MARIO_RACCOON_FLY_UP_RIGHT 3400
+#define ID_ANI_MARIO_RACCOON_FLY_UP_LEFT 3401
+#define ID_ANI_MARIO_RACCOON_FLY_DOWN_RIGHT 3402
+#define ID_ANI_MARIO_RACCOON_FLY_DOWN_LEFT 3403
+
+#define ID_ANI_MARIO_RACCOON_HIT_RIGHT 3500
+#define ID_ANI_MARIO_RACCOON_HIT_LEFT 3501
+
+#define ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_RIGHT 3502
+#define ID_ANI_MARIO_RACCOON_FLY_SLOWDOWN_LEFT 3503
+
+
 // SMALL MARIO
 #define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
 #define ID_ANI_MARIO_SMALL_IDLE_LEFT 1102
@@ -100,6 +154,13 @@
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
 
+#define ID_ANI_MARIO_SMALL_HOLD_RIGHT 1602
+#define ID_ANI_MARIO_SMALL_HOLD_LEFT 1603
+#define ID_ANI_MARIO_SMALL_HOLD_WALK_RIGHT 1604
+#define ID_ANI_MARIO_SMALL_HOLD_WALK_LEFT 1605
+#define ID_ANI_MARIO_SMALL_HOLD_RUNNING_RIGHT 1606
+#define ID_ANI_MARIO_SMALL_HOLD_RUNNING_LEFT 1607
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -116,10 +177,11 @@
 #define MARIO_BIG_SITTING_BBOX_WIDTH  14
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 16
 
-#define MARIO_BIG_RACCOON_BBOX_WIDTH  13
+#define MARIO_BIG_RACCOON_BBOX_WIDTH  21
 #define MARIO_BIG_RACCOON_BBOX_HEIGHT 27
 #define MARIO_BIG_RACCOON_SITTING_BBOX_WIDTH  14
 #define MARIO_BIG_RACCOON_SITTING_BBOX_HEIGHT 16
+#define MARIO_BIG_RACCOON_TAIL_BBOX_WIDTH  8
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 #define MARIO_RACCOON_SIT_HEIGHT_ADJUST ((MARIO_BIG_RACCOON_BBOX_HEIGHT-MARIO_BIG_RACCOON_SITTING_BBOX_HEIGHT)/2 + 1)
@@ -129,19 +191,45 @@
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_HIT_TIME 302
+#define MARIO_SHOWDOWN_TIME 700
+#define MARIO_SHOWDOWN_TIME_SPRITE 700
+#define MARIO_POWER_TIME 75
+#define MARIO_FLY_TIME 5000
+
+#define ID_ANI_SPRITE_POWER_BAR_EMPTY 120121
+#define ID_ANI_SPRITE_POWER_BAR_FILLED 120122
+#define ID_ANI_POWER_BAR_MAX 120120
+#define MARIO_POWER_MAX 10
 
 class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
+	bool isSlowdown;
+	bool isLoadingPower;
+	bool isFlying;
+	bool isHolding;
+	bool isHitting;
+	bool isInHiddenZone;
+	ULONGLONG slowdown_start;
+	ULONGLONG holdingTimeMax;
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
-	int level; 
-	int untouchable; 
+	int power;
+	int level;
+	int untouchable;
+	ULONGLONG holding_start;
+	ULONGLONG power_start;
+	ULONGLONG fly_start;
 	ULONGLONG untouchable_start;
+	ULONGLONG hit_start;
 	BOOLEAN isOnPlatform;
 	int coin; 
+	//float nxspriteposition;
+	//Tail* tail;
+	//int position;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
@@ -153,6 +241,9 @@ class CMario : public CGameObject
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 	void OnCollisionWithSpawn(LPCOLLISIONEVENT e);
 	void OnCollisionWithRedKoopas(LPCOLLISIONEVENT e);
+	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
+	void OnCollisionWithPbutton(LPCOLLISIONEVENT e);
+
 	int GetAniIdBig();
 	int GetAniIdSmall();
 	int GetAniIdRaccoon();
@@ -161,15 +252,31 @@ public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
 		isSitting = false;
+		isSlowdown = false;
+		isLoadingPower = false;
+		isHolding = false;
+		isFlying = false;
+		isHitting = false;
+		isInHiddenZone = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
-		level = MARIO_LEVEL_RACCOON;
+		power = 0;
+		level = 1;
 		untouchable = 0;
+		holdingTimeMax = 0;
+		holding_start = -1;
 		untouchable_start = -1;
+		slowdown_start = -1;
+		power_start = -1;	
+		fly_start = -1;
+		hit_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+		//nxspriteposition = 1;
+		//tail = NULL;
+		//position = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -188,6 +295,27 @@ public:
 	void SetLevel(int l);
 	int GetLevel() { return level; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	void StartHit();
+	void StartSlowdown();
+	void StartLoadPower();
+	void StartHoldingShell();
+	void DropShell();
+	void EndHoldingShell();
+	void EndLoadPower();
+	void EndFly();
+	bool GetShell();
+	bool IsHoldingShell() { return isHolding; }
+	bool IsInHiddenZone() { return isInHiddenZone; }
+	//void AddTail();
+	void IncreaseCoin() { coin++; }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	void GetBoundingBoxRaccoon(float& left, float& top, float& right, float& bottom);
+	static void SetPlayer(CMario*& mario);
+	void AccessHiddenZone();
+	void ExitHiddenZone();
+	void RenderPowerBar();
+	int GetPower() { return power; }
+	bool GetIsLoadingPower() { return isLoadingPower; }
 };
+

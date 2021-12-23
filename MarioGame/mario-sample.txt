@@ -9,6 +9,7 @@ height	240
 0	intro.txt
 1	scene01.txt
 2	scene02.txt
+3	scene03.txt
 
 # id	file 
 [TEXTURES]
@@ -19,3 +20,5 @@ height	240
 30	textures\background.png
 40	textures\enemies2.png
 50	textures\mariogreen.png
+60	textures\pbutton.png
+70	textures\powerbar.png

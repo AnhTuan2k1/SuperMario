@@ -1,7 +1,13 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 80000	5	28	36	75	30
+80001	5	44	36	75	30
+#pipiereverse
+80002	201	361	231	403	30
+#smile cloud
+81000	354	243	369	258	20
 
-
+#hidezone brick
+81001	515	338	530	353	30
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
