@@ -1,5 +1,5 @@
 [SETTINGS]
-start	1
+start	2
 width	320
 height	240
 
@@ -22,3 +22,4 @@ height	240
 50	textures\mariogreen.png
 60	textures\pbutton.png
 70	textures\powerbar.png
+80	textures\castle.png

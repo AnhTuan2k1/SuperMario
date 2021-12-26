@@ -224,6 +224,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int scene_id = atoi(tokens[5].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
+	case OBJECT_TYPE_PORTAL_REWARD:
+	{
+		float r = (float)atof(tokens[3].c_str());
+		float b = (float)atof(tokens[4].c_str());
+		int scene_id = atoi(tokens[5].c_str());
+		obj = new CPortal(x, y, r, b, scene_id, true);
+	}
 	break;
 
 
@@ -338,17 +345,34 @@ void CPlayScene::Update(DWORD dt)
 	float xx, yy;
 	player->GetPosition(cx, cy);
 	player->GetPosition(xx, yy);
+
+
 	CGame* game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
 
+	if (id == 2)
+	{
+		if (cx < 0) cx = 0;
+		if (cx > 2254) cx = 2254;
+
+		if (yy > 400)
+			CGame::GetInstance()->SetCamPos(cx, 460);
+		else
+			CGame::GetInstance()->SetCamPos(cx, 0.0f/*cy*/);
+
+		PurgeDeletedObjects();
+		return;
+	}
+
 	if (cx < 0) cx = 0;
+	if (cx > 2700) player->SetPosition(2700 + game->GetBackBufferWidth() / 2, yy);
 	if (cy < -250) cy = -250;
 	if (cy > 0) cy = 0;
 
 
 	if (dynamic_cast<CMario*>(player)->IsInHiddenZone())
-		CGame::GetInstance()->SetCamPos(HIDDEN_ZONE_X - 30, HIDDEN_ZONE_Y + 15);
+		CGame::GetInstance()->SetCamPos(HIDDEN_ZONE_X - 32, HIDDEN_ZONE_Y + 15);
 	else CGame::GetInstance()->SetCamPos(cx, cy);
 
 	PurgeDeletedObjects();

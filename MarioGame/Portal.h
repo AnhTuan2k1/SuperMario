@@ -12,18 +12,30 @@
 #define EXIT_HIDDEN_ZONE_Y 120
 #define EXIT_HIDDEN_ZONE_X 2445
 
+//sprites in landscape
+#define ID_SPRITE_MUSHROOM_REWARD 123001
+#define ID_SPRITE_FLOWER_REWARD 123002
+#define ID_SPRITE_STAR_REWARD 123003
+#define ID_ANI_REWARD 123000
+
+#define REWARD_BBOX_WIDTH 15
+#define REWARD_BBOX_HEIGHT 15
+
 class CPortal : public CGameObject
 {
 	int scene_id;	// target scene to switch to 
 	float width;
-	float height; 
+	float height;
+	bool isSwitchScene;
 
 public:
 	CPortal(float l, float t, float r, float b, int scene_id);
+	CPortal(float l, float t, float r, float b, int scene_id, bool isreward);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	int GetSceneId() { return scene_id;  }
 	int IsBlocking() { return 0; }
+	int IsSwitchScene() { return isSwitchScene; }
 
 	static void AccessMoneyZone(float x, float y)
 	{

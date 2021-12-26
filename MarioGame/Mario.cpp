@@ -491,7 +491,13 @@ void CMario::OnCollisionWithPbutton(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
-	ExitHiddenZone();
+
+	CPortal* p = (CPortal*)e->obj;
+	if (p->IsSwitchScene())
+		CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+
+	else
+		ExitHiddenZone();
 }
 
 //
