@@ -11,6 +11,10 @@
 #define HIDDEN_ZONE_X 2460
 #define EXIT_HIDDEN_ZONE_Y 120
 #define EXIT_HIDDEN_ZONE_X 2445
+#define A_ZONE_Y 600
+#define A_ZONE_X 1180
+#define B_ZONE_Y 130
+#define B_ZONE_X 1970
 
 //sprites in landscape
 #define ID_SPRITE_MUSHROOM_REWARD 123001
@@ -52,6 +56,45 @@ public:
 			}
 		}
 	}
+
+	static void SwitchToA(float x, float y)
+	{
+		if (x > 1740 && x < 1760 && y < 165 && y > 145)
+		{
+			for (int i = 0; i < CGame::GetInstance()->GetCurrentScene()->NumberObject(); i++)
+			{
+				if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
+				{
+					CMario* mario = dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i));
+					mario->SetPosition(A_ZONE_X, A_ZONE_Y);
+				}
+			}
+		}
+	}
+	static void SwitchToB(float x, float y)
+	{
+		if (x > 1635 && x < 1650 && y < 650 && y > 620)
+		{
+			for (int i = 0; i < CGame::GetInstance()->GetCurrentScene()->NumberObject(); i++)
+			{
+				if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
+				{
+					CMario* mario = dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i));
+					mario->SetPosition(B_ZONE_X, B_ZONE_Y);
+				}
+			}
+		}
+	}
+
+	static void Switch(float x, float y)
+	{
+		if (CGame::GetInstance()->GetCurrentSceneID() == 2)
+		{
+			SwitchToA(x, y);
+			SwitchToB(x, y);
+		}
+	}
+
 
 
 	//float x, y;

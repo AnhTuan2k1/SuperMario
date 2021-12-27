@@ -20,6 +20,11 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->GetPosition(x, y);
 		CPortal::AccessMoneyZone(x,y);
 		break;
+	case DIK_UP:
+		float xx, yy;
+		mario->GetPosition(xx, yy);
+		CPortal::Switch(xx, yy);
+		break;
 	case DIK_S:
 		mario->SetState(MARIO_STATE_FLY);
 		mario->SetState(MARIO_STATE_JUMP);

@@ -15,7 +15,7 @@ assets\landscape.txt
 assets\trap.txt
 
 #adjust mushroom state
-
+# small mario absorb leaf
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
@@ -114,6 +114,13 @@ assets\trap.txt
 7	1655	530	16	15	124003
 7	1655	514	16	15	124003
 
+##door
+16	1751	147	15	15	133333
+16	1751	163	15	15	133233
+
+16	1639	610	15	15	133333
+16	1639	625	15	15	133233
+
 ####Fire ball 
 19	295	55
 20	391	55
@@ -123,5 +130,10 @@ assets\trap.txt
 20	1335	87
 19	1511	55
 
+11	583	100
+10	583	100
+11	1575	120
+10	1575	120
+
 # MARIO
-0	10	120
+0	1600	120
