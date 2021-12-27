@@ -126,6 +126,9 @@
     <ClInclude Include="PowerBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FireBall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -222,6 +225,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PowerBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FireBall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

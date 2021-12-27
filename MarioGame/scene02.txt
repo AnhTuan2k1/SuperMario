@@ -12,6 +12,9 @@ assets\questionbrick.txt
 assets\mushroom.txt
 assets\spawn.txt
 assets\landscape.txt
+assets\trap.txt
+
+#adjust mushroom state
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -111,5 +114,14 @@ assets\landscape.txt
 7	1655	530	16	15	124003
 7	1655	514	16	15	124003
 
+####Fire ball 
+19	295	55
+20	391	55
+19	503	55
+20	631	55
+19	1303	55
+20	1335	87
+19	1511	55
+
 # MARIO
-0	2400	120
+0	10	120

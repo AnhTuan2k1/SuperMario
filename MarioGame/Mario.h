@@ -317,5 +317,6 @@ public:
 	void RenderPowerBar();
 	int GetPower() { return power; }
 	bool GetIsLoadingPower() { return isLoadingPower; }
+	int getUntouchable() { return untouchable; }
 };
 
