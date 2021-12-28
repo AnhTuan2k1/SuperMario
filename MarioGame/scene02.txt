@@ -14,7 +14,7 @@ assets\spawn.txt
 assets\landscape.txt
 assets\trap.txt
 
-#adjust mushroom state
+#adjust mushroom state, movement of fire ball
 # small mario absorb leaf
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -138,6 +138,34 @@ assets\trap.txt
 10	583	100
 11	1575	120
 10	1575	120
+
+#Lava
+23	279	195
+23	295	195
+23	311	195
+23	391	195
+23	407	195
+
+23	487	195
+23	503	195
+23	519	195
+23	614	195
+23	630	195
+23	646	195
+23	662	195
+
+23	1304	195
+23	1320	195
+23	1336	195
+23	1352	195
+
+23	1397	195
+23	1413	195
+23	1429	195
+
+23	1495	195
+23	1511	195
+23	1527	195
 
 #death ball
 22	905	106
