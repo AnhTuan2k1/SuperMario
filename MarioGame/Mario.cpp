@@ -18,6 +18,7 @@
 #include "Brick.h"
 #include "Leaf.h"
 #include "Pbutton.h"
+#include "BoneKoopas.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -122,6 +123,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<RedKoopas*>(e->obj))
 		OnCollisionWithRedKoopas(e);
+	else if (dynamic_cast<BoneKoopas*>(e->obj))
+		OnCollisionWithBoneKoopas(e);
 	else if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
 	else if (dynamic_cast<Spawn*>(e->obj))
@@ -262,6 +265,45 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		if (untouchable == 0)
 		{
 			if (koopa->GetState() == KOOPA_STATE_WALKING || koopa->GetState() == KOOPA_STATE_SHELL_RUNNING)
+			{
+				if (level == MARIO_LEVEL_RACCOON)
+				{
+					SetLevel(MARIO_LEVEL_BIG);
+					StartUntouchable();
+				}
+				else if (level == MARIO_LEVEL_BIG)
+				{
+					SetLevel(MARIO_LEVEL_SMALL);
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
+}
+
+void CMario::OnCollisionWithBoneKoopas(LPCOLLISIONEVENT e)
+{
+	BoneKoopas* bonekoopas = dynamic_cast<BoneKoopas*>(e->obj);
+
+	if (e->ny < 0)
+	{
+		if (bonekoopas->GetState() == BONEKOOPA_STATE_WALKING)
+		{
+			bonekoopas->SetState(BONEKOOPA_STATE_DIE);
+			if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+			else vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+	}
+	else 
+	{
+		if (untouchable == 0)
+		{
+			if (bonekoopas->GetState() == BONEKOOPA_STATE_WALKING)
 			{
 				if (level == MARIO_LEVEL_RACCOON)
 				{

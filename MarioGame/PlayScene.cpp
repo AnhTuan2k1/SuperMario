@@ -20,6 +20,7 @@
 #include "LandScape.h"
 #include "Pbutton.h"
 #include "FireBall.h"
+#include "BoneKoopas.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -131,6 +132,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WINGGOOMBA: obj = new CGoomba(x, y, WINGGOOMBA_STATE_WALKING); break;
 	case OBJECT_TYPE_KOOPAS: obj = new Koopa(x, y); break;
 	case OBJECT_TYPE_REDKOOPAS: obj = new RedKoopas(x, y); break;
+	case OBJECT_TYPE_BONEKOOPAS: obj = new BoneKoopas(x, y); break;
 
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_BRICK_BREAK: obj = new CBrick(x, y, true); break;

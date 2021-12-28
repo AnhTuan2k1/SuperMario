@@ -23,3 +23,4 @@ height	240
 60	textures\pbutton.png
 70	textures\powerbar.png
 80	textures\castle.png
+90	textures\enemies2reverse.png
