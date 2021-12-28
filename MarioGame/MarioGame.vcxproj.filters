@@ -132,6 +132,9 @@
     <ClInclude Include="BoneKoopas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeathBall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -234,6 +237,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BoneKoopas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathBall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
