@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "Mario.h"
+#include "Thorn.h"
 
 /*
 	Object that triggers scene switching
@@ -63,11 +64,18 @@ public:
 		{
 			for (int i = 0; i < CGame::GetInstance()->GetCurrentScene()->NumberObject(); i++)
 			{
-				if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
+				if (dynamic_cast<Thorn*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
+				{
+					Thorn* thorn = dynamic_cast<Thorn*>(CGame::GetInstance()->GetCurrentScene()->getObject(i));
+					thorn->SetState(THORN_STATE_MOVE);
+				}
+		
+				else if (dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i)))
 				{
 					CMario* mario = dynamic_cast<CMario*>(CGame::GetInstance()->GetCurrentScene()->getObject(i));
 					mario->SetPosition(A_ZONE_X, A_ZONE_Y);
 				}
+				
 			}
 		}
 	}
