@@ -15,6 +15,11 @@ void Leaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 
+	if (y < y_initial - LEAF_HEIGHT_BOUNCE && GetState() == LEAF_STATE_BOUNCE)
+	{
+		SetState(LEAF_STATE_MOVING);
+	}
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -30,17 +35,10 @@ void Leaf::OnNoCollision(DWORD dt)
 	x += vx * dt;
 	y += vy * dt;
 
-	if (y < y_initial - LEAF_HEIGHT_BOUNCE && GetState() == LEAF_STATE_BOUNCE)
-	{
-		SetState(LEAF_STATE_MOVING);
-		DebugOut(L">>>leaf moving>>> \n");
-	}
-
-	if (state == LEAF_STATE_MOVING && 
-		(x > x_initial + LEAF_MOVEMENT_SCOPE || x < x_initial - LEAF_MOVEMENT_SCOPE ))
+	if (state == LEAF_STATE_MOVING &&
+		(x > x_initial + LEAF_MOVEMENT_SCOPE || x < x_initial - LEAF_MOVEMENT_SCOPE))
 	{
 		vx = -vx;
-		DebugOut(L">>>leaf change direct>>> \n");
 	}
 }
 

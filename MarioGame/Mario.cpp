@@ -20,6 +20,7 @@
 #include "Pbutton.h"
 #include "BoneKoopas.h"
 #include "Boss.h"
+#include "DeathBall.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -134,6 +135,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithLeaf(e);
 	else if (dynamic_cast<Boss*>(e->obj))
 		OnCollisionWithBoss(e);
+	else if (dynamic_cast<DeathBall*>(e->obj))
+		OnCollisionWithDeathBall(e);
 	else if (dynamic_cast<Pbutton*>(e->obj))
 		OnCollisionWithPbutton(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -389,7 +392,7 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	Mushroom* mushroom = dynamic_cast<Mushroom*>(e->obj);
 
-	if (mushroom->GetState() == MUSHROOM_STATE_MOVING && level == MARIO_LEVEL_SMALL)
+	if (mushroom->GetState() != MUSHROOM_STATE_HIDE && level == MARIO_LEVEL_SMALL)
 	{
 		SetLevel(MARIO_LEVEL_BIG);
 		mushroom->Delete();
@@ -540,6 +543,15 @@ void CMario::OnCollisionWithBoss(LPCOLLISIONEVENT e)
 			boss->SetState(BOSS_STATE_DIE);
 		}
 	}
+}
+
+void CMario::OnCollisionWithDeathBall(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 1) return;
+
+	DeathBall* deathBall = dynamic_cast<DeathBall*>(e->obj);
+	StartUntouchable();
+	SetLevel(GetLevel() - 1);
 }
 
 void CMario::OnCollisionWithPbutton(LPCOLLISIONEVENT e)

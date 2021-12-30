@@ -12,10 +12,6 @@ assets\questionbrick.txt
 assets\mushroom.txt
 assets\spawn.txt
 assets\landscape.txt
-# sprite for mario
-# fix redkoopas
-# up mushroom, leaf
-# bug:  sitting Mario big  is hitted by an enemy.
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
@@ -351,4 +347,4 @@ assets\landscape.txt
 50	2715	301	2730	302	1
 51	2750	120	2765	165	2
 # MARIO
-0	2900	-200
+0	10	120

@@ -28,11 +28,6 @@ void Mushroom::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
-
-	if (y < y_initial - MUSHROOM_HEIGHT_BOUNCE && GetState() == MUSHROOM_STATE_BOUNCE)
-	{
-		SetState(MUSHROOM_STATE_MOVING);	
-	}
 }
 void Mushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
@@ -54,6 +49,11 @@ void Mushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	if (y < y_initial - MUSHROOM_HEIGHT_BOUNCE && GetState() == MUSHROOM_STATE_BOUNCE)
+	{
+		SetState(MUSHROOM_STATE_MOVING);
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);

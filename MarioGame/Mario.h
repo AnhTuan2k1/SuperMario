@@ -244,6 +244,7 @@ class CMario : public CGameObject
 	void OnCollisionWithRedKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	void OnCollisionWithBoss(LPCOLLISIONEVENT e);
+	void OnCollisionWithDeathBall(LPCOLLISIONEVENT e);
 	void OnCollisionWithPbutton(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();

@@ -22,7 +22,7 @@ void Thorn::OnNoCollision(DWORD dt)
 void Thorn::Render()
 {
 	CSprites* s = CSprites::GetInstance();
-	s->Get(ID_SPRITE_PIPE)->Draw(x, y);
+	s->Get(ID_SPRITE_THORN)->Draw(x, y);
 }
 
 void Thorn::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

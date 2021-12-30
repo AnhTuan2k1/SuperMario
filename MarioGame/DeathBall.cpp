@@ -33,12 +33,12 @@ void DeathBall::OnNoCollision(DWORD dt)
 
 void DeathBall::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj))
-	{
-		CMario* mario = dynamic_cast<CMario*>(e->obj);
-		if (mario->getUntouchable() == 1) return;
+	//if (dynamic_cast<CMario*>(e->obj))
+	//{
+	//	CMario* mario = dynamic_cast<CMario*>(e->obj);
+	//	if (mario->getUntouchable() == 1) return;
 
-		mario->StartUntouchable();
-		mario->SetLevel(mario->GetLevel() - 1);
-	}
+	//	mario->StartUntouchable();
+	//	mario->SetLevel(mario->GetLevel() - 1);
+	//}
 }

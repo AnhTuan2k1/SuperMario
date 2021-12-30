@@ -14,8 +14,6 @@ assets\spawn.txt
 assets\landscape.txt
 assets\trap.txt
 
-#adjust mushroom state, movement of fire ball
-# small mario absorb leaf
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
@@ -134,8 +132,8 @@ assets\trap.txt
 19	1511	55
 
 ##question brick
-11	583	100
-10	583	100
+11	583	116
+10	583	116
 11	1575	120
 10	1575	120
 
@@ -210,4 +208,4 @@ assets\trap.txt
 12	2300	20	25	2500	120
 
 # MARIO
-0	2000	120
+0	10	120
