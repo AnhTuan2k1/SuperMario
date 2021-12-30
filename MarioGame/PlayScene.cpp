@@ -24,6 +24,7 @@
 #include "DeathBall.h"
 #include "Lava.h"
 #include "Thorn.h"
+#include "Boss.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -149,6 +150,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MUSHROOM: obj = new Mushroom(x, y); break;
 	case OBJECT_TYPE_PBUTTON: obj = new Pbutton(x, y); break;
 	case OBJECT_TYPE_FIREBALL: obj = new FireBall(x, y); break;
+	case OBJECT_TYPE_BOSS: obj = new Boss(x, y); break;
 	case OBJECT_TYPE_FIREBALL_DELAY: obj = new FireBall(x, y, true); break;
 	//case OBJECT_TYPE_POWERBAR: obj = new PowerBar(x, y); break;
 
@@ -199,6 +201,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			case OBJECT_TYPE_WINGGOOMBA: objSPawn = new CGoomba(xxx, yyy, WINGGOOMBA_STATE_WALKING); break;
 			case OBJECT_TYPE_KOOPAS: objSPawn = new Koopa(xxx, yyy); break;
 			case OBJECT_TYPE_REDKOOPAS: objSPawn = new RedKoopas(xxx, yyy); break;
+			case OBJECT_TYPE_BOSS: objSPawn = new Boss(xxx, yyy); break;
 			}
 			objectsSpawn.push_back(objSPawn);
 

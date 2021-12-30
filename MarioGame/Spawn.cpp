@@ -18,6 +18,9 @@ void Spawn::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void Spawn::CreateEnemies()
 {
+	if(objects.size() == 1) // Boss
+		CGame::GetInstance()->GetCurrentScene()->AddObjectAt(objects[0], 10);
+	else
 	for (int i = 0; i < objects.size(); i++)
 	{
 		CGame::GetInstance()->GetCurrentScene()->AddObject(objects[i]);

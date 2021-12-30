@@ -19,6 +19,7 @@
 #include "Leaf.h"
 #include "Pbutton.h"
 #include "BoneKoopas.h"
+#include "Boss.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -131,6 +132,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithSpawn(e);
 	else if (dynamic_cast<Leaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<Boss*>(e->obj))
+		OnCollisionWithBoss(e);
 	else if (dynamic_cast<Pbutton*>(e->obj))
 		OnCollisionWithPbutton(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -509,6 +512,34 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	}
 
 	leaf->Delete();
+}
+
+void CMario::OnCollisionWithBoss(LPCOLLISIONEVENT e)
+{
+	Boss* boss = dynamic_cast<Boss*>(e->obj);
+
+	if (e->nx != 0)
+	{
+		if (untouchable) return;
+		StartUntouchable();
+		SetLevel(level - 1);
+	}
+	else if (e->ny < 0)
+	{
+		if (boss->GetState() != BOSS_STATE_SHELL_IDLE)
+		{
+			boss->SetState(BOSS_STATE_SHELL_IDLE);
+			boss->DecreaseLife();
+
+			if (isFlying) vy = -MARIO_FLY_JUMP_DEFLECT_SPEED_Y;
+			else vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+
+		if (boss->GetLife() <= 0)
+		{
+			boss->SetState(BOSS_STATE_DIE);
+		}
+	}
 }
 
 void CMario::OnCollisionWithPbutton(LPCOLLISIONEVENT e)
