@@ -10,3 +10,4 @@ d:          hold and drop koopas shell
 arrow up:   go into the door (in castle world)
 arrow left: walk left
 arrow right:walk right
+
