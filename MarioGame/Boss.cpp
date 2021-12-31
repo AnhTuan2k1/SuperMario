@@ -1,5 +1,6 @@
 #include "Boss.h"
 #include "Mario.h"
+#include "Portal.h"
 
 void Boss::OnCollisionWith(LPCOLLISIONEVENT e)
 {
@@ -202,6 +203,7 @@ void Boss::SetState(int state)
 	case BOSS_STATE_DIE:
 		vx = 0;
 		//y += (BOSS_HEIGHT - BOSS_HEIGHT_DIE) / 2 - 1;
+		CGame::GetInstance()->GetCurrentScene()->AddObject(new CPortal(x, y - 30, 15, 15, 3, true));
 		break;
 	}
 }

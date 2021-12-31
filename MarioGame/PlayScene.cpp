@@ -237,6 +237,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float b = (float)atof(tokens[4].c_str());
 		int scene_id = atoi(tokens[5].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
+		break;
 	}
 	case OBJECT_TYPE_PORTAL_REWARD:
 	{
@@ -244,8 +245,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float b = (float)atof(tokens[4].c_str());
 		int scene_id = atoi(tokens[5].c_str());
 		obj = new CPortal(x, y, r, b, scene_id, true);
+		break;
 	}
-	break;
+	
 
 
 	default:
@@ -375,6 +377,12 @@ void CPlayScene::Update(DWORD dt)
 		else
 			CGame::GetInstance()->SetCamPos(cx, 0.0f/*cy*/);
 
+		PurgeDeletedObjects();
+		return;
+	}
+	if (id == 3) //map
+	{
+		CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
 		PurgeDeletedObjects();
 		return;
 	}

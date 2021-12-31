@@ -94,12 +94,35 @@ public:
 		}
 	}
 
+	static void ChooseScene1(float x, float y)
+	{
+		if (x > 90 && x < 110 && y < 40 && y > 30)
+		{
+			CGame::GetInstance()->InitiateSwitchScene(1);
+		}
+	}
+	static void ChooseCaslte(float x, float y)
+	{
+		if (x > 120 && x < 140 && y < 95 && y > 92)
+		{
+			CGame::GetInstance()->InitiateSwitchScene(2);
+		}
+	}
+
 	static void Switch(float x, float y)
 	{
 		if (CGame::GetInstance()->GetCurrentSceneID() == 2)
 		{
 			SwitchToA(x, y);
 			SwitchToB(x, y);
+		}
+	}
+	static void ChooseScene(float x, float y)
+	{
+		if (CGame::GetInstance()->GetCurrentSceneID() == 3)
+		{
+			ChooseScene1(x, y);
+			ChooseCaslte(x, y);
 		}
 	}
 

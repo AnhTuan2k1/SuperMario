@@ -1,0 +1,48 @@
+# list of object assets to load in this scene
+[ASSETS]
+assets\map.txt
+assets\mario.txt
+assets\brick.txt
+assets\goomba.txt
+assets\land.txt
+assets\rectangle.txt
+assets\pipe.txt
+assets\koopa.txt
+assets\coin.txt
+assets\questionbrick.txt
+assets\mushroom.txt
+assets\spawn.txt
+assets\landscape.txt
+
+[OBJECTS]
+# type	x	y	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 8 = WingGoomba, 3 = Koopas, 9 = DCoin, 10 = QuestionBrick, 11=mushroom
+# 13= D1Coin    14 = red koopa
+
+
+16	150	100	233	131	160001
+#platform
+
+
+
+7	62	36	47	25	162002
+7	70	73	64	1	162002
+7	62	120	50	90	162002
+
+7	127	63	52	38	162002
+7	138	113	70	15	162002
+7	128	141	50	7	162002
+
+7	192	45	44	2	162002
+7	192	118	45	90	162002
+
+
+7	0	20	1000	1	162001
+7	0	170	1000	1	162001
+7	38	0	1	1000	162001
+7	230	0	1	1000	162001
+
+# MARIO
+0	62	60
+#0	93	32
+#0	122	93
