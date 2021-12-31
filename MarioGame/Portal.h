@@ -124,6 +124,10 @@ public:
 			ChooseScene1(x, y);
 			ChooseCaslte(x, y);
 		}
+		else if (CGame::GetInstance()->GetCurrentSceneID() == 4)
+		{
+			CGame::GetInstance()->InitiateSwitchScene(3);
+		}
 	}
 
 

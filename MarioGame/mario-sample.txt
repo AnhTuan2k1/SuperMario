@@ -1,7 +1,5 @@
 [SETTINGS]
-start	3
-width	320
-height	240
+start	4
 
 #id	type	file
 # type: 0: intro, 1: play scene 
@@ -10,6 +8,7 @@ height	240
 1	scene01.txt
 2	scene02.txt
 3	scene03map.txt
+4	welcomescreen.txt
 
 # id	file 
 [TEXTURES]
@@ -25,3 +24,4 @@ height	240
 80	textures\castle.png
 90	textures\enemies2reverse.png
 100	textures\map.png
+110	textures\intro.png

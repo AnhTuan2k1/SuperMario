@@ -380,7 +380,7 @@ void CPlayScene::Update(DWORD dt)
 		PurgeDeletedObjects();
 		return;
 	}
-	if (id == 3) //map
+	if (id == 3 || id == 4) //map
 	{
 		CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
 		PurgeDeletedObjects();
