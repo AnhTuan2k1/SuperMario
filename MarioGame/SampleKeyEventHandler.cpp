@@ -29,6 +29,9 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetState(MARIO_STATE_FLY);
 		mario->SetState(MARIO_STATE_JUMP);
 		mario->StartSlowdown();
+		float xxx, yyy;
+		mario->GetPosition(xxx, yyy);
+		CPortal::ChooseScene(xxx, yyy);
 		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
@@ -56,6 +59,12 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		else mario->GetShell();
 		break;
 
+	case DIK_RETURN:
+		float xxxx, yyyy;
+		mario->GetPosition(xxxx, yyyy);
+		CPortal::ChooseScene(xxxx, yyyy);
+		break;
+
 	}
 }
 
@@ -71,6 +80,9 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
+		if (CGame::GetInstance()->GetCurrentSceneID() == 3)
+			mario->SetState(MARIO_STATE_DOWN_RELEASE);
+		break;
 		break;
 	case DIK_A:
 		mario->EndLoadPower();
@@ -81,6 +93,12 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_LEFT:
 		if (mario->GetIsLoadingPower()) mario->EndLoadPower();
 		break;
+
+	case DIK_UP:
+		if (CGame::GetInstance()->GetCurrentSceneID() == 3)
+			mario->SetState(MARIO_STATE_UP_RELEASE);
+		break;
+
 	}
 }
 
@@ -89,6 +107,17 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3)
+	{
+		if (game->IsKeyDown(DIK_UP))
+		{
+			mario->SetState(MARIO_STATE_UP);
+		}
+		else if (game->IsKeyDown(DIK_DOWN))
+		{
+			mario->SetState(MARIO_STATE_DOWN);
+		}
+	}
 
 	if (game->IsKeyDown(DIK_RIGHT))
 	{

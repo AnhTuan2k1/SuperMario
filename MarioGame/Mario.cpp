@@ -579,7 +579,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 
 	CPortal* p = (CPortal*)e->obj;
 	if (p->IsSwitchScene())
-		CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+		CGame::GetInstance()->InitiateSwitchScene(3);
 
 	else
 		ExitHiddenZone();
@@ -591,6 +591,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 int CMario::GetAniIdSmall()
 {
 	int aniId = -1;
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3) return ID_ANI_SMALL_MARIO_MAP;
 	if (!isOnPlatform)
 	{
 		if (isHolding)
@@ -689,6 +690,7 @@ int CMario::GetAniIdSmall()
 int CMario::GetAniIdBig()
 {
 	int aniId = -1;
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3) return ID_ANI_BIG_MARIO_MAP;
 	if (!isOnPlatform)
 	{
 		if (isHolding)
@@ -790,7 +792,7 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRaccoon()
 {
 	int aniId = -1;
-
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3) return ID_ANI_RACCOON_MARIO_MAP;
 	if (!isOnPlatform)
 	{
 		if (isHitting)
@@ -1096,13 +1098,35 @@ void CMario::SetState(int state)
 		}
 		
 		break;
+		
+	case MARIO_STATE_UP:
+		vy = -MARIO_WALKING_SPEED;
+		break;
+	case MARIO_STATE_DOWN:
+		vy = MARIO_WALKING_SPEED;
+		break;
+	case MARIO_STATE_UP_RELEASE:
+		vy = 0;
+		break;
+	case MARIO_STATE_DOWN_RELEASE:
+		vy = 0;		
+		break;
 	}
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3) ay = 0;
 
 	CGameObject::SetState(state);
 }
 
 void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3)
+	{
+		left = x - MARIO_RACCOON_MAP_BBOX_WIDTH / 2;
+		top = y - MARIO_RACCOON_MAP_BBOX_HEIGHT / 2;
+		right = left + MARIO_RACCOON_MAP_BBOX_WIDTH;
+		bottom = top + MARIO_RACCOON_MAP_BBOX_HEIGHT;
+	}else
+
 	if (level == MARIO_LEVEL_BIG)
 	{
 		if (isSitting)
@@ -1198,6 +1222,7 @@ void CMario::SetPlayer(CMario*& mario)
 void CMario::SetLevel(int l)
 {
 	// Adjust position to avoid falling off platform
+	if (CGame::GetInstance()->GetCurrentSceneID() != 3)
 	if (this->level == MARIO_LEVEL_SMALL)
 	{
 		if (l == MARIO_LEVEL_RACCOON)
